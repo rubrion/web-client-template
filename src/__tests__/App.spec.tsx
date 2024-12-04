@@ -1,5 +1,5 @@
 import App from '../App';
-import '@testing-library/jest-dom/';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 test('renders the Vite + React heading', () => {
