@@ -4,15 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "dev": "vite",
-    "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -27,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-istanbul": "^2.1.8",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
@@ -40,6 +42,7 @@
     "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "globals": "^15.13.0",
+    "jsdom": "^25.0.1",
     "prettier": "^3.4.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.15.0",
