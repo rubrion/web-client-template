@@ -5,7 +5,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './setupTests.ts',
-    include: ['**/*.test.{ts,tsx}'],
     exclude: ['node_modules', 'dist'],
     coverage: {
       provider: 'istanbul',
