@@ -38,6 +38,10 @@ The template includes a `.prettierrc` file with the following settings:
 
 Prettier is seamlessly integrated with ESLint, so all formatting issues are reported during linting.
 
+Here's the updated **How to Use** section along with the **Scripts**:
+
+---
+
 ## How to Use
 
 1. **Clone the Template**:
@@ -59,30 +63,71 @@ Prettier is seamlessly integrated with ESLint, so all formatting issues are repo
    npm run dev
    ```
 
-4. **Lint the Project**:
+4. **Build the Project**:
+
+   ```bash
+   npm run build
+   ```
+
+5. **Preview the Production Build**:
+
+   ```bash
+   npm run preview
+   ```
+
+6. **Lint the Project**:
 
    ```bash
    npm run lint
    ```
 
-5. **Fix Linting Issues**:
+7. **Fix Linting Issues**:
 
    ```bash
    npm run lint:fix
    ```
 
-6. **Format Code**:
+8. **Format the Codebase**:
+
    ```bash
    npm run format
    ```
+
+9. **Check Code Formatting**:
+
+   ```bash
+   npm run format:check
+   ```
+
+10. **Run Unit Tests**:
+
+    ```bash
+    npm run test
+    ```
+
+11. **Generate Coverage Reports**:
+
+    ```bash
+    npm run test:coverage
+    ```
+
+12. **Open Vitest UI**:
+
+    ```bash
+    npm run test:ui
+    ```
+
+---
 
 ## Scripts
 
 - **`npm run dev`**: Start the development server.
 - **`npm run build`**: Create a production-ready build.
 - **`npm run preview`**: Preview the production build.
-- **`npm run lint`**: Lint the codebase.
-- **`npm run lint:fix`**: Fix linting issues.
+- **`npm run lint`**: Lint the codebase using ESLint.
+- **`npm run lint:fix`**: Automatically fix linting issues where possible.
 - **`npm run format`**: Format the codebase with Prettier.
-
----
+- **`npm run format:check`**: Check if the codebase is properly formatted.
+- **`npm run test`**: Run all unit tests with Vitest.
+- **`npm run test:coverage`**: Generate a coverage report for the tests.
+- **`npm run test:ui`**: Open the Vitest UI for managing and running tests interactively.
