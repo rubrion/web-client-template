@@ -131,3 +131,71 @@ Here's the updated **How to Use** section along with the **Scripts**:
 - **`npm run test`**: Run all unit tests with Vitest.
 - **`npm run test:coverage`**: Generate a coverage report for the tests.
 - **`npm run test:ui`**: Open the Vitest UI for managing and running tests interactively.
+
+---
+
+### Setting up Blackbox for File Encryption
+
+To securely encrypt sensitive files in this project using **StackExchange Blackbox**, follow these steps:
+
+#### 1. Install `BlackBox`
+
+You can automatically install StackExchange Blackbox via the following commands:
+
+```bash
+git clone https://github.com/StackExchange/blackbox.git
+cd blackbox
+sudo make copy-install
+```
+
+This will copy the necessary files into `/usr/local/bin`.
+
+#### 2. Obtain the Encoded GPG Keys
+
+The **public** and **private** Base64-encoded GPG keys are stored in the repository's "Secrets."
+Ask the project maintainer to share the keys with you if you do not have access yet.
+
+You will receive:
+
+- A **Base64-encoded public key**
+- A **Base64-encoded private key**
+
+#### 3. Import the Public Key
+
+Once you receive the **Base64-encoded public key**, use the following command to decode and import it:
+
+```bash
+echo "base64_encoded_public_key" | base64 --decode | gpg --import
+```
+
+- Replace `base64_encoded_public_key` with the actual Base64-encoded string of the public key.
+
+#### 4. Import the Private Key
+
+After importing the public key, you'll also need to import the **private key** for decryption purposes. To do that, use the following command:
+
+```bash
+echo "base64_encoded_private_key" | base64 --decode | gpg --import
+```
+
+- Replace `base64_encoded_private_key` with the actual Base64-encoded string of the private key.
+
+#### 5. Verify the Import
+
+You can verify if both keys were successfully imported with the following command:
+
+```bash
+gpg --list-secret-keys
+```
+
+This will list the GPG keys on your system, and you should see both the public and private key associated with your GPG email.
+
+#### 6. Decrypt Files with `BlackBox`
+
+With both the public and private keys imported, you can now decrypt the files in your project:
+
+```bash
+blackbox_decrypt_all_files
+```
+
+This command will decrypt all files that were encrypted with Blackbox, using your imported GPG keys.
