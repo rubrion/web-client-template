@@ -1,0 +1,56 @@
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+      - "release/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          projectName: ${{ vars.PROJECT_NAME }}
+          directory: dist
+          branch: ${{ github.ref_name }}
+
+      - name: Set Custom Domain for Production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/pages/projects/${{ vars.PROJECT_NAME }}" \
+          -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data '{
+            "custom_domain": "${{ vars.PROJECT_NAME }}.com"
+          }'
+
+      - name: Set Custom Domain for Release
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/release\///' | tr '/' '-')  
+          curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/pages/projects/${{ vars.PROJECT_NAME }}" \
+          -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data '{
+            "custom_domain": "'"$VERSION.${{ vars.PROJECT_NAME }}.com"'"
+          }'
