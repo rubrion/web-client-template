@@ -1,38 +1,25 @@
-import './App.css';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import { useState } from 'react';
+import Footer from './components/ui/Footer';
+import AppRoutes from './routes/routes';
+import lightTheme from './theme/lightTheme';
 
-import viteLogo from '/vite.svg';
-
-import reactLogo from './assets/react.svg';
-
-function App() {
-  const [count, setCount] = useState(0);
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <Router>
+        <div id="root">
+          <main id="main-content">
+            <AppRoutes />
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
