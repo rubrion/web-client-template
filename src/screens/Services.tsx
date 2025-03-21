@@ -61,7 +61,6 @@ const services = [
 const Services: React.FC = () => {
   return (
     <Box>
-      <Navbar />
       <HeroSection
         title="Our Services"
         subtitle="We offer a wide range of digital services to help your business thrive in the digital landscape."

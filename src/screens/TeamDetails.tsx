@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-import { HeroSection, Navbar } from '../components/ui';
+import { Navbar } from '../components/ui';
 
 const teamMembers = [
   {
@@ -90,13 +90,6 @@ const TeamDetails: React.FC = () => {
   return (
     <Box>
       <Navbar />
-      <HeroSection
-        title="Our Team"
-        subtitle="Meet the talented individuals who make our company thrive."
-        overline="TEAM"
-        imageSrc="team-hero.png"
-        buttons={[{ text: 'Join Our Team' }]}
-      />
 
       <Container maxWidth="lg" sx={{ my: 8 }}>
         <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>

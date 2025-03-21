@@ -85,7 +85,12 @@ const Navbar: React.FC<NavbarProps> = ({
         position="static"
         sx={{
           bgcolor: transparent ? 'transparent' : 'primary.main',
-          paddingTop: '64px' // Add padding-top to ensure consistency
+          paddingTop: '32px', // Add padding-top to ensure consistency
+          paddingBottom: '32px', // Add padding-bottom to ensure consistency
+          [theme.breakpoints.down('sm')]: {
+            paddingTop: '16px', // Adjust padding-top for smaller screens
+            paddingBottom: '16px', // Adjust padding-bottom for smaller screens
+          },
         }}
       >
         <Container maxWidth="lg" disableGutters>

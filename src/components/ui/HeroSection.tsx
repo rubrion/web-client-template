@@ -8,6 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+
 import Navbar from './Navbar'; // Import Navbar component
 
 interface HeroSectionProps {
@@ -23,14 +24,18 @@ interface HeroSectionProps {
 const StyledHeroSection = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
-  padding: theme.spacing(8, 0),
   position: 'relative',
-  height: '100vh', // Occupy the whole initial viewport
-  maxHeight: '100vh', // Set maximum height to the viewport height
+  height: 'calc(100vh - 64px - 64px)', // Adjust height to account for Navbar height and additional space
+  maxHeight: 'calc(100vh - 64px - 64px)', // Set maximum height to the viewport height minus Navbar height
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start', // Align components at the top
   alignItems: 'flex-start', // Ensure elements are positioned at the top
+  overflow: 'hidden', // Ensure content does not overflow
+  [theme.breakpoints.down('sm')]: {
+    height: 'calc(100vh - 56px - 56px)', // Adjust height for smaller screens
+    maxHeight: 'calc(100vh - 56px - 56px)', // Set maximum height for smaller screens
+  },
 }));
 
 const ArrowDown = styled('div')<{ show: boolean }>(({ theme, show }) => ({
@@ -108,7 +113,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       <Navbar /> {/* Add Navbar component */}
       <StyledHeroSection ref={heroRef}>
         <Container maxWidth="lg">
-          <Grid2 container spacing={8} sx={{ alignItems: 'flex-start' }}> {/* Align items at the top */}
+          <Grid2 container spacing={8} sx={{ alignItems: 'flex-start' }}>
+            {' '}
+            {/* Align items at the top */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Typography
                 variant="overline"
@@ -146,16 +153,20 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 </Box>
               )}
             </Grid2>
-
             {/* Right Section - Image */}
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid2
+              size={{ xs: 12, md: 6 }}
+              sx={{ display: 'flex', justifyContent: 'flex-start' }}
+            >
               <Box
                 sx={{
                   backgroundImage: `url(${imageSrc})`,
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
-                  height: { xs: 250, md: 378 },
+                  height: { xs: 250, md: 378 }, // Set specific height for the image container
+                  width: '100%', // Ensure image fits within the container
+                  alignSelf: 'flex-start', // Align image at the top
                 }}
               />
             </Grid2>
