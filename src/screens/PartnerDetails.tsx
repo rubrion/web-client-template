@@ -39,7 +39,7 @@ const PartnerDetails: React.FC = () => {
   return (
     <Box>
       <Navbar />
-      <Container maxWidth="lg" sx={{ my: 8 }}>
+      <Container id="partners-section" maxWidth="lg" sx={{ my: 8 }}>
         <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
           Meet Our Partners
         </Typography>

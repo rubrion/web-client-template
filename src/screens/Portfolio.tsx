@@ -10,6 +10,8 @@ import {
 import React from 'react';
 
 import { HeroSection } from '../components/ui';
+import ROUTES from '../routes';
+import { useNavigate } from 'react-router-dom';
 
 const projects = [
   {
@@ -60,12 +62,18 @@ const projects = [
 ];
 
 const Portfolio: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Box>
       <HeroSection
         title="Our Portfolio"
         subtitle="Explore our diverse range of projects and see how we've helped businesses transform their digital presence."
         overline="SHOWCASE"
+        buttons={[{
+          text: 'Know Our Services',
+          onClick: () => navigate(`${ROUTES.PUBLIC.SERVICES.path}?scrollTo=services-section`),
+        }]}
       />
 
       <Container maxWidth="lg" sx={{ my: 8 }}>

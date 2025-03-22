@@ -8,8 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-
-import { HeroSection } from '../components/ui';
+import { Navbar } from '../components/ui';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -37,11 +36,7 @@ const Contact: React.FC = () => {
 
   return (
     <Box>
-      <HeroSection
-        title="Contact Us"
-        subtitle="Get in touch with our team to discuss your project requirements or any questions you may have."
-        overline="CONTACT"
-      />
+      <Navbar />
       <Container maxWidth="lg" sx={{ my: 8 }}>
         <Grid2 container spacing={6}>
           <Grid2 size={{ xs: 12, md: 5 }}>

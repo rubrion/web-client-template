@@ -68,7 +68,7 @@ const Services: React.FC = () => {
         buttons={[{ text: 'Get Started' }]}
       />
 
-      <Container maxWidth="lg" sx={{ my: 8 }}>
+      <Container id="services-section" maxWidth="lg" sx={{ my: 8 }}>
         <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
           What We Offer
         </Typography>

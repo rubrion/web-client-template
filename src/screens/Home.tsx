@@ -71,6 +71,7 @@ const Home: React.FC = () => {
       <HeroSection
         title="Lorem ipsum dolor sit amet consectetur"
         subtitle="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Suscipit nemo hic quos, ab, dolor aperiam nobis cum est eos error ipsum, voluptate culpa nesciunt delectus iste?"
+        imageSrc='/group.png'
         buttons={[
           {
             text: 'Become Partner',
@@ -87,7 +88,8 @@ const Home: React.FC = () => {
         title="Learn More About Us"
         subtitle="Discover our mission, values, and the team behind our success."
         buttonText="Read More"
-        onButtonClick={() => navigate(ROUTES.PUBLIC.ABOUT.path)}
+        onButtonClick={() => navigate(`${ROUTES.PUBLIC.ABOUT.path}?scrollTo=our-story-section`)}
+
       >
         <Grid2 size={{ xs: 12, sm: 6 }}>
           <Box>
@@ -106,7 +108,7 @@ const Home: React.FC = () => {
         title="Lorem Ipsum Dolor"
         subtitle="Lorem ipsum, dolor sit amet consectetur\nadipisicing elit."
         buttonText="View Partners"
-        onButtonClick={() => navigate(ROUTES.PUBLIC.PARTNERDETAILS.path)}
+        onButtonClick={() => navigate(`${ROUTES.PUBLIC.PARTNERDETAILS.path}?scrollTo=partners-section`)}
       >
         <Grid2
           container
@@ -140,7 +142,7 @@ const Home: React.FC = () => {
         title="Our Talents"
         subtitle="Lorem ipsum, dolor sit amet consectetur\nSuscipit nemo hic quos, ab,"
         buttonText="View Team"
-        onButtonClick={() => navigate(ROUTES.PUBLIC.TEAMDETAILS.path)}
+        onButtonClick={() => navigate(`${ROUTES.PUBLIC.TEAMDETAILS.path}?scrollTo=team-details-section`)}
       >
         <Grid2 container spacing={4} justifyContent="center">
           {teamMembers.map((member, index) => (

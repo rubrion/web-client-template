@@ -13,7 +13,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { Navbar } from '../components/ui';
 import ROUTES from '../routes';
-import { fetchBlogPostById } from '../services/blogService';
+import { fetchBlogPostById } from '../services/blog';
 
 interface BlogPost {
   id: string;

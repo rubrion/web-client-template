@@ -14,16 +14,15 @@ const About: React.FC = () => {
         title="About Our Company"
         subtitle="Learn about our mission, values, and the team behind our success."
         overline="ABOUT US"
-        imageSrc="about-hero.png"
         buttons={[
           {
             text: 'Meet Our Team',
-            onClick: () => navigate(ROUTES.PUBLIC.TEAMDETAILS.path),
+            onClick: () => navigate(`${ROUTES.PUBLIC.TEAMDETAILS.path}?scrollTo=team-details-section`),
           },
         ]}
       />
 
-      <Container maxWidth="lg" sx={{ my: 8 }}>
+      <Container id="our-story-section" maxWidth="lg" sx={{ my: 8 }}>
         <Grid2 container spacing={6}>
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Box>

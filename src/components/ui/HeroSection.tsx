@@ -73,7 +73,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   subtitle,
   overline = 'WELCOME',
   buttonVariant = 'secondary',
-  imageSrc = '/group.png',
+  imageSrc,
   buttons = [],
 }) => {
   const theme = useTheme();

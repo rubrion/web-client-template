@@ -14,7 +14,8 @@ import { Link } from 'react-router-dom';
 
 import { HeroSection } from '../components/ui';
 import ROUTES from '../routes';
-import { fetchBlogPosts } from '../services/blogService';
+import { fetchBlogPosts } from '../services/blog';
+import NewsletterPopup from '../components/ui/Newsletter';
 
 interface BlogPost {
   id: string;
@@ -26,6 +27,7 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState(1);
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
   const postsPerPage = 6;
 
   useEffect(() => {
@@ -52,6 +54,14 @@ const Blog: React.FC = () => {
   ) => {
     setPage(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenNewsletter = () => {
+    setNewsletterOpen(true);
+  };
+
+  const handleCloseNewsletter = () => {
+    setNewsletterOpen(false);
   };
 
   // Calculate pagination
@@ -84,7 +94,7 @@ const Blog: React.FC = () => {
           subtitle="Stay updated with the latest news, insights, and trends in our industry."
           overline="BLOG"
           imageSrc="blog-hero.png"
-          buttons={[{ text: 'Subscribe' }]}
+          buttons={[{ text: 'Subscribe', onClick: handleOpenNewsletter }]}
         />
 
         <Container maxWidth="lg" sx={{ my: 8 }}>
@@ -95,6 +105,8 @@ const Blog: React.FC = () => {
             Check back soon for new content!
           </Typography>
         </Container>
+
+        <NewsletterPopup open={newsletterOpen} onClose={handleCloseNewsletter} />
       </Box>
     );
   }
@@ -105,10 +117,10 @@ const Blog: React.FC = () => {
         title="Our Blog"
         subtitle="Stay updated with the latest news, insights, and trends in our industry."
         overline="BLOG"
-        imageSrc="blog-hero.png"
         buttons={[
           {
             text: 'Subscribe',
+            onClick: handleOpenNewsletter,
           },
         ]}
       />
@@ -171,7 +183,23 @@ const Blog: React.FC = () => {
             />
           </Box>
         )}
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6, mb: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleOpenNewsletter}
+          >
+            Subscribe to Our Newsletter
+          </Button>
+        </Box>
+        <Typography variant="body2" color="text.secondary" align="center">
+          Get the latest articles delivered directly to your inbox
+        </Typography>
       </Container>
+
+      <NewsletterPopup open={newsletterOpen} onClose={handleCloseNewsletter} />
     </Box>
   );
 };

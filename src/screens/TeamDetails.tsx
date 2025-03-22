@@ -91,7 +91,7 @@ const TeamDetails: React.FC = () => {
     <Box>
       <Navbar />
 
-      <Container maxWidth="lg" sx={{ my: 8 }}>
+      <Container id="team-details-section" maxWidth="lg" sx={{ my: 8 }}>
         <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
           Meet Our Experts
         </Typography>
