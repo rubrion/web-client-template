@@ -9,11 +9,12 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { Navbar } from '../components/ui';
+import { LoadingIndicator, Navbar } from '../components/ui';
 import ROUTES from '../routes';
 import { fetchBlogPostById } from '../services/blog';
+import { createScrollRoute } from '../utils/navigationUtils';
 
 interface BlogPost {
   id: string;
@@ -26,6 +27,7 @@ interface BlogPost {
 
 const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -46,32 +48,39 @@ const PostDetail: React.FC = () => {
     getPost();
   }, [id]);
 
-  if (loading) {
+  const handleBackToBlog = () => {
+    // Navigate to blog with a scroll target to the articles section
+    navigate(createScrollRoute(ROUTES.BLOG.LIST.path, 'articles-section'));
+  };
+
+  if (loading && !post) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '50vh',
-        }}
-      >
-        <Typography>Loading...</Typography>
+      <Box>
+        <Navbar />
+        <Container maxWidth="lg" sx={{ my: 8 }}>
+          <LoadingIndicator message="Loading post details" fullHeight />
+        </Container>
       </Box>
     );
   }
 
   if (!post) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '50vh',
-        }}
-      >
-        <Typography variant="h5">Post not found</Typography>
+      <Box>
+        <Navbar />
+        <Container maxWidth="lg" sx={{ my: 8 }}>
+          <Typography variant="h5" sx={{ textAlign: 'center' }}>
+            Post not found
+          </Typography>
+          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              onClick={handleBackToBlog}
+            >
+              Back to Blog
+            </Button>
+          </Box>
+        </Container>
       </Box>
     );
   }
@@ -86,54 +95,39 @@ const PostDetail: React.FC = () => {
       <Navbar />
 
       <Container maxWidth="lg" sx={{ my: 8 }}>
-        <Box sx={{ mb: 4 }}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link
-              to={ROUTES.PUBLIC.HOME.path}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              Home
-            </Link>
-            <Link
-              to={ROUTES.BLOG.LIST.path}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              Blog
-            </Link>
-            <Typography color="text.primary">{post.title}</Typography>
-          </Breadcrumbs>
-        </Box>
-
-        <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              Published on {postDate} by {author}
-            </Typography>
-            <Box sx={{ mt: 2 }}>
-              {categories.map((category, index) => (
-                <Chip
-                  key={index}
-                  label={category}
-                  size="small"
-                  sx={{ mr: 1, mb: 1 }}
-                />
-              ))}
+        {loading ? (
+          <LoadingIndicator message="Updating post content" />
+        ) : (
+          <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body2" color="text.secondary">
+                Published on {postDate} by {author}
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                {categories.map((category, index) => (
+                  <Chip
+                    key={index}
+                    label={category}
+                    size="small"
+                    sx={{ mr: 1, mb: 1 }}
+                  />
+                ))}
+              </Box>
             </Box>
-          </Box>
 
-          <Divider sx={{ mb: 4 }} />
+            <Divider sx={{ mb: 4 }} />
 
-          <Box sx={{ '& img': { maxWidth: '100%', height: 'auto' } }}>
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          </Box>
-        </Paper>
+            <Box sx={{ '& img': { maxWidth: '100%', height: 'auto' } }}>
+              <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            </Box>
+          </Paper>
+        )}
 
         <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center' }}>
           <Button
             variant="contained"
             color="primary"
-            component={Link}
-            to={ROUTES.BLOG.LIST.path}
+            onClick={handleBackToBlog}
           >
             Back to Blog
           </Button>

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -7,9 +8,13 @@ import {
   Grid2,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { CTASection, HeroSection, Navbar } from '../components/ui';
+import { CTASection, Navbar } from '../components/ui';
+import { useScrollTo } from '../hooks/useScrollTo';
+import ROUTES from '../routes';
+import { gridSizes } from '../theme/themeUtils';
 
 const services = [
   {
@@ -59,23 +64,32 @@ const services = [
 ];
 
 const Services: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { scrollToElement } = useScrollTo();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const scrollToId = params.get('scrollTo');
+
+    if (scrollToId) {
+      scrollToElement(scrollToId);
+    }
+  }, []);
+
   return (
     <Box>
-      <HeroSection
-        title="Our Services"
-        subtitle="We offer a wide range of digital services to help your business thrive in the digital landscape."
+      <Navbar />
+
+      <CTASection
+        id="services-section"
         overline="SERVICES"
-        buttons={[{ text: 'Get Started' }]}
-      />
-
-      <Container id="services-section" maxWidth="lg" sx={{ my: 8 }}>
-        <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
-          What We Offer
-        </Typography>
-
+        title="What We Offer"
+        maxWidth="lg"
+      >
         <Grid2 container spacing={4}>
           {services.map((service) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={service.id}>
+            <Grid2 size={gridSizes.quarterWidth} key={service.id}>
               <Card sx={{ height: '100%' }}>
                 <CardMedia
                   component="div"
@@ -101,7 +115,7 @@ const Services: React.FC = () => {
                   <Typography gutterBottom variant="h5" component="h2">
                     {service.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
+                  <Typography variant="body2" color="text.secondary" component="p" sx={{ mb: 2 }}>
                     {service.description}
                   </Typography>
                   <Typography variant="body2" component="div">
@@ -116,13 +130,14 @@ const Services: React.FC = () => {
             </Grid2>
           ))}
         </Grid2>
-      </Container>
+      </CTASection>
 
       <CTASection
         overline="PROCESS"
         title="How We Work"
         subtitle="Our streamlined process ensures efficient\nand effective delivery of your project."
-        buttonText="Start Your Project"
+        buttonText="Get Started"
+        onButtonClick={() => navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=services`)}
       >
         <Grid2 container spacing={2} justifyContent="center">
           {[
@@ -152,7 +167,7 @@ const Services: React.FC = () => {
                 'We deploy your solution and provide ongoing support.',
             },
           ].map((step, index) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+            <Grid2 size={gridSizes.thirdWidth} key={index}>
               <Box
                 sx={{
                   p: 3,
@@ -183,6 +198,10 @@ const Services: React.FC = () => {
             </Grid2>
           ))}
         </Grid2>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+          Tell us what you need — we'll deliver tailored solutions for your
+          business.
+        </Typography>
       </CTASection>
     </Box>
   );

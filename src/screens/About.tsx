@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { CTASection, HeroSection } from '../components/ui';
 import ROUTES from '../routes';
+import { gridSizes } from '../theme/themeUtils';
+import { createScrollRoute } from '../utils/navigationUtils';
 
 const About: React.FC = () => {
   const navigate = useNavigate();
@@ -17,14 +19,17 @@ const About: React.FC = () => {
         buttons={[
           {
             text: 'Meet Our Team',
-            onClick: () => navigate(`${ROUTES.PUBLIC.TEAMDETAILS.path}?scrollTo=team-details-section`),
+            onClick: () =>
+              navigate(
+                createScrollRoute(ROUTES.PUBLIC.TEAMDETAILS.path, 'team-details-section')
+              ),
           },
         ]}
       />
 
       <Container id="our-story-section" maxWidth="lg" sx={{ my: 8 }}>
         <Grid2 container spacing={6}>
-          <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid2 size={gridSizes.halfWidth}>
             <Box>
               <h2>Our Story</h2>
               <p>
@@ -39,7 +44,7 @@ const About: React.FC = () => {
               </p>
             </Box>
           </Grid2>
-          <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid2 size={gridSizes.halfWidth}>
             <Box
               sx={{
                 backgroundImage: `url('about-story.png')`,
@@ -79,7 +84,7 @@ const About: React.FC = () => {
               description: 'Working together to achieve common goals.',
             },
           ].map((value, index) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+            <Grid2 size={gridSizes.quarterWidth} key={index}>
               <Box
                 sx={{
                   p: 3,

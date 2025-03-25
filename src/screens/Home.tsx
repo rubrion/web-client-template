@@ -1,29 +1,37 @@
-import { Box, Grid2 } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { HeroSection } from '../components/ui';
-import CTASection from '../components/ui/CTASection';
-import TeamMember from '../components/ui/TeamMember';
+import TeamCard from '../components/ui/Card/TeamCard';
+import { TeamMemberType } from '../components/ui/Card/TeamCard';
+import GridLayout from '../components/ui/GridLayout';
+import CTASection from '../components/ui/Section/CTASection';
 import ROUTES from '../routes';
+import { gridSizes, spacing } from '../theme/themeUtils';
+import { createScrollRoute, createScrollToTopRoute } from '../utils/navigationUtils';
 
-const teamMembers = [
+const teamMembers: TeamMemberType[] = [
   {
+    id: 1,
     name: 'Peg Legge',
     role: 'CEO',
     image: 'mask-group.png',
   },
   {
+    id: 2,
     name: 'Richard Guerra',
     role: 'CTO',
     image: 'mask-group-1.png',
   },
   {
+    id: 3,
     name: 'Alexandra Stolz',
     role: 'DESIGNER',
     image: 'mask-group-2.png',
   },
   {
+    id: 4,
     name: 'Janet Bray',
     role: 'DEVELOPER',
     image: 'mask-group-3.png',
@@ -32,31 +40,31 @@ const teamMembers = [
 
 const partnerLogos = [
   {
-    src: 'xmlid-24-.svg',
+    src: 'google-logo.svg',
     alt: 'Partner Logo',
     width: '152.64px',
     height: '50px',
   },
   {
-    src: 'xmlid-1-.svg',
+    src: 'microsoft-logo.svg',
     alt: 'Partner Logo',
     width: '210.85px',
     height: '45px',
   },
   {
-    src: 'xmlid-1--1.svg',
+    src: 'airbnb-logo.svg',
     alt: 'Partner Logo',
     width: '160.29px',
     height: '50px',
   },
   {
-    src: 'group-4.svg',
+    src: 'facebook-logo.svg',
     alt: 'Partner Logo',
     width: '196.38px',
     height: '38px',
   },
   {
-    src: 'xmlid-1--2.svg',
+    src: 'spotify-logo.svg',
     alt: 'Partner Logo',
     width: '166.82px',
     height: '50px',
@@ -66,12 +74,42 @@ const partnerLogos = [
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
+  // No need for useScrollTo here as it's handled at the app level
+
+  const teamCards = teamMembers.map((member) => (
+    <TeamCard key={member.id} member={member} variant="simple" />
+  ));
+
+  const partnerLogoItems = partnerLogos.map((logo, index) => (
+    <Box
+      key={index}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '80px',
+      }}
+    >
+      <img
+        src={logo.src}
+        alt={logo.alt}
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          objectFit: 'contain',
+        }}
+      />
+    </Box>
+  ));
+
   return (
     <Box>
       <HeroSection
         title="Lorem ipsum dolor sit amet consectetur"
+        overline="WELCOME"
         subtitle="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Suscipit nemo hic quos, ab, dolor aperiam nobis cum est eos error ipsum, voluptate culpa nesciunt delectus iste?"
-        imageSrc='/group.png'
+        imageSrc="/group.png"
         buttons={[
           {
             text: 'Become Partner',
@@ -79,89 +117,68 @@ const Home: React.FC = () => {
           },
           {
             text: 'Join Our Team',
+            onClick: () => navigate(ROUTES.PUBLIC.TEAMJOIN.path),
           },
         ]}
       />
 
       <CTASection
+        id="about-section"
         overline="ABOUT US"
         title="Learn More About Us"
         subtitle="Discover our mission, values, and the team behind our success."
         buttonText="Read More"
-        onButtonClick={() => navigate(`${ROUTES.PUBLIC.ABOUT.path}?scrollTo=our-story-section`)}
-
-      >
-        <Grid2 size={{ xs: 12, sm: 6 }}>
-          <Box>
-            <h2>Our Story</h2>
-            <p>
-              Founded in 2020, our company has grown from a small startup to a
-              leader in the industry. We believe in innovation, quality, and
-              customer satisfaction.
-            </p>
-          </Box>
-        </Grid2>
-      </CTASection>
+        onButtonClick={() =>
+          navigate(createScrollRoute(ROUTES.PUBLIC.ABOUT.path, 'our-story-section'))
+        }
+        py={5} // Reduced padding specifically after hero section
+      ></CTASection>
 
       <CTASection
+        id="partners-section"
         overline="PARTNERS"
         title="Lorem Ipsum Dolor"
         subtitle="Lorem ipsum, dolor sit amet consectetur\nadipisicing elit."
         buttonText="View Partners"
-        onButtonClick={() => navigate(`${ROUTES.PUBLIC.PARTNERDETAILS.path}?scrollTo=partners-section`)}
+        onButtonClick={() =>
+          navigate(createScrollRoute(ROUTES.PUBLIC.PARTNERDETAILS.path, 'partners-section'))
+        }
       >
-        <Grid2
-          container
-          spacing={4}
+        <GridLayout
+          items={partnerLogoItems}
+          itemProps={{
+            xs: 12,
+            sm: 6,
+            md: 4,
+            lg: 2.4, // Allows 5 logos in a row on large screens
+          }}
+          spacing={2}
           justifyContent="center"
-          alignItems="center"
-        >
-          {partnerLogos.map((logo, index) => (
-            <Grid2
-              size={{ xs: 6, sm: 4, md: 'auto' }}
-              key={index}
-              sx={{
-                alignItems: 'center',
-              }}
-            >
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                style={{
-                  maxWidth: '100%',
-                  height: 'auto',
-                }}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
+          containerProps={{
+            alignItems: 'center',
+            sx: {
+              maxWidth: '100%',
+              mx: 'auto',
+            }
+          }}
+        />
       </CTASection>
 
       <CTASection
+        id="team-section"
         overline="TEAM"
         title="Our Talents"
         subtitle="Lorem ipsum, dolor sit amet consectetur\nSuscipit nemo hic quos, ab,"
         buttonText="View Team"
-        onButtonClick={() => navigate(`${ROUTES.PUBLIC.TEAMDETAILS.path}?scrollTo=team-details-section`)}
+        onButtonClick={() =>
+          navigate(createScrollRoute(ROUTES.PUBLIC.TEAMDETAILS.path, 'team-details-section'))
+        }
       >
-        <Grid2 container spacing={4} justifyContent="center">
-          {teamMembers.map((member, index) => (
-            <Grid2
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-              key={index}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <TeamMember
-                name={member.name}
-                role={member.role}
-                image={member.image}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
+        <GridLayout
+          items={teamCards}
+          itemProps={gridSizes.quarterWidth}
+          spacing={4}
+        />
       </CTASection>
     </Box>
   );

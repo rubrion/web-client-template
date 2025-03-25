@@ -8,10 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-
-import { HeroSection } from '../components/ui';
-import ROUTES from '../routes';
 import { useNavigate } from 'react-router-dom';
+
+import { CTASection, HeroSection } from '../components/ui';
+import ROUTES from '../routes';
+import { gridSizes } from '../theme/themeUtils';
+import { createScrollRoute } from '../utils/navigationUtils';
 
 const projects = [
   {
@@ -70,20 +72,23 @@ const Portfolio: React.FC = () => {
         title="Our Portfolio"
         subtitle="Explore our diverse range of projects and see how we've helped businesses transform their digital presence."
         overline="SHOWCASE"
-        buttons={[{
-          text: 'Know Our Services',
-          onClick: () => navigate(`${ROUTES.PUBLIC.SERVICES.path}?scrollTo=services-section`),
-        }]}
+        buttons={[
+          {
+            text: 'Know Our Services',
+            onClick: () =>
+              navigate(createScrollRoute(ROUTES.PUBLIC.SERVICES.path, 'services-section')),
+          },
+        ]}
       />
 
-      <Container maxWidth="lg" sx={{ my: 8 }}>
-        <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
-          Featured Projects
-        </Typography>
-
+      <CTASection
+        overline="SHOWCASE"
+        title="Featured Projects"
+        maxWidth="lg"
+      >
         <Grid2 container spacing={4}>
           {projects.map((project) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={project.id}>
+            <Grid2 size={gridSizes.thirdWidth} key={project.id}>
               <Card
                 sx={{
                   height: '100%',
@@ -116,7 +121,7 @@ const Portfolio: React.FC = () => {
             </Grid2>
           ))}
         </Grid2>
-      </Container>
+      </CTASection>
     </Box>
   );
 };

@@ -3,13 +3,16 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Container,
   Grid2,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Navbar } from '../components/ui';
+import { CTASection, Navbar } from '../components/ui';
+import { useScrollTo } from '../hooks/useScrollTo';
+import ROUTES from '../routes';
+import { gridSizes } from '../theme/themeUtils';
 
 const partners = [
   {
@@ -36,22 +39,39 @@ const partners = [
 ];
 
 const PartnerDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { scrollToElement } = useScrollTo();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const scrollToId = params.get('scrollTo');
+
+    if (scrollToId) {
+      scrollToElement(scrollToId);
+    }
+  }, []);
+
   return (
     <Box>
       <Navbar />
-      <Container id="partners-section" maxWidth="lg" sx={{ my: 8 }}>
-        <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
-          Meet Our Partners
-        </Typography>
 
+      <CTASection
+        id="partners-section"
+        overline="PARTNERS"
+        title="Meet Our Partners"
+        buttonText="Become Partner"
+        onButtonClick={() => navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=partner`)}
+      >
         <Grid2 container spacing={4}>
           {partners.map((partner) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={partner.id}>
+            <Grid2 size={gridSizes.thirdWidth} key={partner.id}>
               <Card
                 sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
+                  overflow: 'hidden',
                 }}
               >
                 <CardMedia
@@ -62,13 +82,14 @@ const PartnerDetails: React.FC = () => {
                     backgroundImage: `url(${partner.logo})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
                   }}
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
+                <CardContent sx={{ flexGrow: 1, pt: 2 }}>
                   <Typography gutterBottom variant="h5" component="h2">
                     {partner.name}
                   </Typography>
-                  <Typography variant="body2" paragraph>
+                  <Typography variant="body2" component="p" sx={{ mb: 2 }}>
                     {partner.description}
                   </Typography>
                   <Typography variant="body2">
@@ -86,7 +107,10 @@ const PartnerDetails: React.FC = () => {
             </Grid2>
           ))}
         </Grid2>
-      </Container>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+          Join us in building something great together
+        </Typography>
+      </CTASection>
     </Box>
   );
 };

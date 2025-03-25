@@ -1,15 +1,17 @@
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
   Container,
   Grid2,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Navbar } from '../components/ui';
+import { CTASection, Navbar } from '../components/ui';
+import { useScrollTo } from '../hooks/useScrollTo';
+import TeamCard from '../components/ui/Card/TeamCard';
+import ROUTES from '../routes';
+import { gridSizes } from '../theme/themeUtils';
 
 const teamMembers = [
   {
@@ -87,67 +89,42 @@ const teamMembers = [
 ];
 
 const TeamDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { scrollToElement } = useScrollTo();
+
+  // Handle scroll on component mount if needed
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const scrollToId = params.get('scrollTo');
+
+    if (scrollToId) {
+      scrollToElement(scrollToId);
+    }
+  }, []);
+
   return (
     <Box>
       <Navbar />
 
-      <Container id="team-details-section" maxWidth="lg" sx={{ my: 8 }}>
-        <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
-          Meet Our Experts
-        </Typography>
-
+      <CTASection
+        id="team-details-section"
+        overline="TEAM"
+        title="Meet Our Experts"
+        buttonText="Join Our Team"
+        onButtonClick={() => navigate(ROUTES.PUBLIC.TEAMJOIN.path)}
+      >
         <Grid2 container spacing={4}>
           {teamMembers.map((member) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={member.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <CardMedia
-                  component="div"
-                  sx={{
-                    height: 0,
-                    paddingTop: '100%',
-                    backgroundImage: `url(${member.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {member.name}
-                  </Typography>
-                  <Typography variant="subtitle1" color="primary" gutterBottom>
-                    {member.role}
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    {member.bio}
-                  </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Areas of Expertise:
-                  </Typography>
-                  <Typography variant="body2" component="div">
-                    <ul>
-                      {member.expertise.map((skill, index) => (
-                        <li key={index}>{skill}</li>
-                      ))}
-                    </ul>
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    <strong>Education:</strong> {member.education}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Contact:</strong> {member.contact}
-                  </Typography>
-                </CardContent>
-              </Card>
+            <Grid2 size={gridSizes.thirdWidth} key={member.id}>
+              <TeamCard member={member} variant="detailed" />
             </Grid2>
           ))}
         </Grid2>
-      </Container>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+          We'd love to learn more about you — send in your application today!
+        </Typography>
+      </CTASection>
     </Box>
   );
 };

@@ -39,6 +39,12 @@ const PUBLIC_ROUTES: Record<string, RouteObject> = {
     description:
       'Meet the companies we collaborate with to bring you the best solutions.',
   },
+  TEAMJOIN: {
+    path: '/join-our-team',
+    label: 'Join Our Team',
+    description:
+      'Apply to join our talented team and grow your career with us.',
+  },
 };
 
 export default PUBLIC_ROUTES;

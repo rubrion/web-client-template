@@ -25,6 +25,19 @@ footer {
   flex-shrink: 0;
 }
 
+/* Animation classes for main content transitions */
+.app-content-preloading {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.app-content-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in;
+}
+
+/* Logo styles */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,6 +53,7 @@ footer {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Animation keyframes */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -48,6 +62,148 @@ footer {
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress-bar-animation {
+  0% {
+    left: -30%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Fix for smooth loading animation transition */
+@keyframes progressAnim {
+  0% {
+    left: -30%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Animation handling - improved transitions */
+@keyframes fade-to-content {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-to-content {
+  animation: fade-to-content 0.4s ease-in-out forwards;
+}
+
+/* Improved loading animation */
+@keyframes progress-line {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-line {
+  animation: progress-line 1.5s infinite ease-in-out;
+}
+
+/* Animation utility classes */
+.fade-in {
+  animation: fade-in 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+  animation: fade-out 0.5s ease-in-out forwards;
+}
+
+.scale-in {
+  animation: scale-in 0.6s ease-in-out forwards;
+}
+
+.slide-up {
+  animation: slide-up 0.6s ease-in-out forwards;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30%;
+  background-color: #74c69d;
+  border-radius: 2px;
+  animation: progress-bar-animation 1s infinite linear;
+}
+
+.bounce {
+  animation: bounce 2s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -62,4 +218,9 @@ footer {
 
 .read-the-docs {
   color: #888;
+}
+
+/* Debug helper class */
+.debug-outline {
+  border: 1px solid red;
 }

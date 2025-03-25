@@ -14,6 +14,7 @@ const Portfolio = React.lazy(() => import('../screens/Portfolio'));
 const Services = React.lazy(() => import('../screens/Services'));
 const TeamDetails = React.lazy(() => import('../screens/TeamDetails'));
 const PartnerDetails = React.lazy(() => import('../screens/PartnerDetails'));
+const TeamJoin = React.lazy(() => import('../screens/TeamJoin'));
 
 const AppRoutes: React.FC = () => {
   return (
@@ -43,6 +44,17 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           path={ROUTES.BLOG.LIST.path}
+          element={
+            <PageHelmet
+              title={ROUTES.BLOG.LIST.label}
+              description={ROUTES.BLOG.LIST.description}
+            >
+              <Blog />
+            </PageHelmet>
+          }
+        />
+        <Route
+          path={ROUTES.BLOG.LIST_PAGED_STATIC}
           element={
             <PageHelmet
               title={ROUTES.BLOG.LIST.label}
@@ -115,6 +127,17 @@ const AppRoutes: React.FC = () => {
               description={ROUTES.PUBLIC.PARTNERDETAILS.description}
             >
               <PartnerDetails />
+            </PageHelmet>
+          }
+        />
+        <Route
+          path={ROUTES.PUBLIC.TEAMJOIN.path}
+          element={
+            <PageHelmet
+              title={ROUTES.PUBLIC.TEAMJOIN.label}
+              description={ROUTES.PUBLIC.TEAMJOIN.description}
+            >
+              <TeamJoin />
             </PageHelmet>
           }
         />

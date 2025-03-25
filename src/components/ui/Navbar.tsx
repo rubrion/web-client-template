@@ -18,7 +18,7 @@ import {
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import ROUTES from '../../routes'; // Import your routes configuration
+import ROUTES from '../../routes';
 
 interface NavItem {
   label: string;
@@ -42,13 +42,13 @@ const defaultNavItems: NavItem[] = [
 
 const Navbar: React.FC<NavbarProps> = ({
   transparent = false,
-  logoSrc = '/group-1-1.svg',
+  logoSrc = '/logo.svg',
   logoText = 'Start',
   navItems = defaultNavItems,
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
@@ -85,17 +85,41 @@ const Navbar: React.FC<NavbarProps> = ({
         position="static"
         sx={{
           bgcolor: transparent ? 'transparent' : 'primary.main',
-          paddingTop: '32px', // Add padding-top to ensure consistency
-          paddingBottom: '32px', // Add padding-bottom to ensure consistency
-          [theme.breakpoints.down('sm')]: {
-            paddingTop: '16px', // Adjust padding-top for smaller screens
-            paddingBottom: '16px', // Adjust padding-bottom for smaller screens
+          paddingTop: '32px',
+          paddingBottom: '32px',
+          [theme.breakpoints.down('md')]: {
+            paddingTop: '16px',
+            paddingBottom: '16px',
           },
         }}
       >
-        <Container maxWidth="lg" disableGutters>
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Container
+          maxWidth="lg"
+          disableGutters
+        >
+          <Toolbar
+            sx={{
+              justifyContent: 'space-between',
+              flexWrap: 'nowrap',
+              minHeight: { xs: '48px', sm: '64px' },
+              p: 0,
+              pl: 0,
+              pr: { xs: 1, sm: 1 }
+            }}
+          >
+            <Box
+              component={Link}
+              to={ROUTES.PUBLIC.HOME.path}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 0.9
+                }
+              }}
+            >
               <img width={70} height={48} alt="Logo" src={logoSrc} />
               <Typography
                 variant="h4"
@@ -105,17 +129,24 @@ const Navbar: React.FC<NavbarProps> = ({
               </Typography>
             </Box>
             {isMobile ? (
-              <IconButton color="inherit" onClick={handleDrawerToggle}>
+              <IconButton color="inherit" onClick={handleDrawerToggle} edge="end">
                 <MenuIcon />
               </IconButton>
             ) : (
-              <Box component="nav">
+              <Box
+                component="nav"
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'nowrap',
+                  overflow: 'hidden'
+                }}
+              >
                 {navItems.map((item) => (
                   <Button
                     key={item.label}
                     component={Link}
                     to={item.path}
-                    sx={{ color: 'primary.contrastText', mx: 1 }}
+                    sx={{ color: 'primary.contrastText', mx: 0.75, whiteSpace: 'nowrap' }}
                   >
                     {item.label}
                   </Button>
@@ -131,10 +162,10 @@ const Navbar: React.FC<NavbarProps> = ({
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
         sx={{
-          display: { xs: 'block', sm: 'none' },
+          display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
         }}
       >

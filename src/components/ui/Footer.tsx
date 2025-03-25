@@ -1,15 +1,17 @@
 import { Box, Container, Typography } from '@mui/material';
 import React from 'react';
 
+import { spacing } from '../../theme/themeUtils';
+
 // Define social media icons
 const defaultSocialIcons = [
-  { src: 'group-33.svg', alt: 'Social Icon' },
-  { src: 'group-34.svg', alt: 'Social Icon' },
-  { src: 'group-35.svg', alt: 'Social Icon' },
-  { src: 'group-36.svg', alt: 'Social Icon' },
-  { src: 'group-37.svg', alt: 'Social Icon' },
-  { src: 'group-38.svg', alt: 'Social Icon' },
-  { src: 'group-39.svg', alt: 'Social Icon' },
+  { src: 'facebook-ico.svg', alt: 'Social Icon' },
+  { src: 'instagram-ico.svg', alt: 'Social Icon' },
+  { src: 'twitter-ico.svg', alt: 'Social Icon' },
+  { src: 'pinterest-ico.svg', alt: 'Social Icon' },
+  { src: 'tiktok-ico.svg', alt: 'Social Icon' },
+  { src: 'whatsapp-ico.svg', alt: 'Social Icon' },
+  { src: 'youtube-ico.svg', alt: 'Social Icon' },
 ];
 
 interface FooterProps {
@@ -19,14 +21,14 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({
   socialIcons = defaultSocialIcons,
-  copyrightText = '© Start, 2022. All rights reserved.',
+  copyrightText = '© Start, 2025. All rights reserved.',
 }) => {
   return (
     <Box
       sx={{
         bgcolor: 'primary.main',
         py: 4,
-        pb: { xs: `calc(env(safe-area-inset-bottom) + 16px)`, sm: 4 },
+        pb: { xs: `calc(env(safe-area-inset-bottom) + 16px)`, sm: spacing.sm },
       }}
     >
       <Container maxWidth="lg">
