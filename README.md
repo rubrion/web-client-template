@@ -1,3 +1,106 @@
+# Rubrion Web Client Template
+
+A comprehensive React + TypeScript frontend starter template with built-in routing, SEO optimization, theming, mock services, and more. This template provides a standardized starting point for Rubrion web client projects.
+
+## Table of Contents
+
+- [Features](#features)
+- [Feature Usage Guidelines](#feature-usage-guidelines)
+  - [Routing (React Router)](#routing-react-router)
+  - [SEO with PageHelmet](#seo-with-pagehelmet)
+  - [Mock Service Worker (MSW)](#mock-service-worker-msw)
+  - [Theme System (Dark/Light Modes)](#theme-system-darklight-modes)
+  - [Breadcrumbs](#breadcrumbs)
+  - [Lazy Loading](#lazy-loading)
+  - [MSW Initialization Command](#msw-initialization-command)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+- [Project Structure](#project-structure)
+- [How to Use](#how-to-use)
+- [Scripts](#scripts)
+- [Setting up Blackbox for File Encryption](#setting-up-blackbox-for-file-encryption)
+
+## Features
+
+- **Vite**: Fast, modern build tool for development
+- **React + TypeScript**: Strong typing with modern React
+- **ESLint & Prettier**: Code quality and consistent formatting
+- **React Router**: Type-safe routing with navigation and SEO metadata
+- **MSW (Mock Service Worker)**: API mocking for development and testing
+- **Theme System**: Dark/light mode with CSS variables
+- **SEO Optimization**: Helmet-based metadata management
+- **Lazy Loading**: Code-splitting for performance
+- **Breadcrumbs**: Automatic navigation breadcrumbs
+- **EditorConfig**: Consistent coding styles across editors
+
+## Feature Usage Guidelines
+
+This template provides many features to make development easier. However, not all features are necessary for every project. Below are recommendations on when to use each one:
+
+### Routing (React Router)
+
+- Use for multi-page or multi-route apps.
+- If building a simple single-page app, you can remove or reduce routing complexity.
+- Named routing works best for SEO or when you need route-based metadata (e.g., dynamic blog pages).
+
+### SEO with PageHelmet
+
+- Ideal for public-facing apps that need search engine visibility.
+- In small internal tools, you can remove it if SEO is not required.
+
+### Mock Service Worker (MSW)
+
+- Use when you need to mock or simulate API requests during development or tests.
+- If your app has no API calls or you have full backend coverage from the start, MSW can be removed.
+
+### Theme System (Dark/Light Modes)
+
+- Applies consistent styles across the app and allows easy theme switching.
+- If the project does not require a dark mode or theme customization, you can remove the `ThemeContext` and simplify the CSS variables.
+
+### Breadcrumbs
+
+- Helpful if you have nested routes or want users to navigate deeper pages more easily.
+- Can be removed for flat or very simple navigation structures.
+
+### Lazy Loading
+
+- Improves performance by splitting code into smaller chunks.
+- Recommended for larger apps, but can be skipped in small projects with minimal code.
+
+### MSW Initialization Command
+
+- If you use MSW to intercept requests at path `'/'`, you must run:
+  ```
+  npx msw init ./public --save
+  ```
+  once for each new project or whenever you re-create the `/public` folder.
+
+## Getting Started
+
+### Installation
+
+1. Clone this template:
+
+   ```bash
+   git clone https://github.com/rubrion/web-client-template.git my-project
+   cd my-project
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+## Project Structure
+
+````markdown
 # Vite + React + TypeScript Template with ESLint & Prettier
 
 This template provides a consistent starting point for frontend projects built with Vite, React, and TypeScript. It integrates ESLint and Prettier to enforce code quality and style consistency across multiple development environments.
@@ -35,6 +138,7 @@ The template includes a `.prettierrc` file with the following settings:
   "tabWidth": 2
 }
 ```
+````
 
 Prettier is seamlessly integrated with ESLint, so all formatting issues are reported during linting.
 
@@ -131,6 +235,7 @@ Here's the updated **How to Use** section along with the **Scripts**:
 - **`npm run test`**: Run all unit tests with Vitest.
 - **`npm run test:coverage`**: Generate a coverage report for the tests.
 - **`npm run test:ui`**: Open the Vitest UI for managing and running tests interactively.
+- **`npm run setup`**: Set up editor configurations and git hooks for consistent code formatting.
 
 ---
 
