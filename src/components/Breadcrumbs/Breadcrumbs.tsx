@@ -10,17 +10,13 @@ function Breadcrumbs({ currentPath }: BreadcrumbsProps) {
   const routes = getAllRoutes();
   const pathSegments = currentPath.split('/').filter((segment) => segment);
 
-  // Home is always the first breadcrumb
   const breadcrumbs = [{ name: 'Home', path: '/' }];
 
-  // Build breadcrumb trail based on path segments
   let currentBuiltPath = '';
   pathSegments.forEach((segment) => {
     currentBuiltPath += `/${segment}`;
 
-    // Try to find a matching route for this path
     const matchingRoute = routes.find((route) => {
-      // For static routes, direct comparison
       if (route.path === currentBuiltPath) {
         return true;
       }

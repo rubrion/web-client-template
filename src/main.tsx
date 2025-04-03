@@ -5,16 +5,11 @@ import { createRoot } from 'react-dom/client';
 
 import App from './App.tsx';
 
-// Initialize MSW in development mode
 async function initMocks() {
-  if (import.meta.env.DEV) {
-    const { worker } = await import('./mocks/browser');
-    return worker.start({ onUnhandledRequest: 'bypass' });
-  }
-  return Promise.resolve();
+  const { worker } = await import('./mocks/browser');
+  return worker.start({ onUnhandledRequest: 'bypass' });
 }
 
-// Start the app after MSW is initialized
 initMocks().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
