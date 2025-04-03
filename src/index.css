@@ -216,8 +216,8 @@ button:hover {
   border-radius: var(--radius-sm);
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
-  content: "/";
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '/';
   padding: 0 var(--space-sm);
   color: var(--color-text-secondary);
 }

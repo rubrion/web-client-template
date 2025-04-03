@@ -2,8 +2,8 @@ import './App.css';
 
 import { HelmetProvider } from 'react-helmet-async';
 
+import { ThemeProvider } from './context/ThemeProvider';
 import AppRouter from './routes';
-import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (

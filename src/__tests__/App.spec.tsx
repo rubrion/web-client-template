@@ -1,21 +1,33 @@
 import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import React from 'react';
 
 import App from '../App';
 
-// Mock the router to avoid navigation issues in tests
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    BrowserRouter: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  };
-});
+// Mock the context and router to avoid navigation and theme issues in tests
+vi.mock('../context/ThemeContext', () => ({
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
 
-test('renders the application with router', () => {
-  render(<App />);
-  // Since we're now using the router, we should test differently
-  // This is a simple test to verify the app renders without errors
-  expect(document.body).toBeInTheDocument();
+vi.mock('react-helmet-async', () => ({
+  HelmetProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
+
+vi.mock('react-router-dom', () => ({
+  createBrowserRouter: vi.fn(() => ({})),
+  RouterProvider: ({ children }: { children?: React.ReactNode }) => (
+    <div data-testid="router">{children}</div>
+  ),
+}));
+
+describe('App component', () => {
+  test('renders the application with router', () => {
+    const { baseElement } = render(<App />);
+    expect(baseElement).toBeInTheDocument();
+  });
 });

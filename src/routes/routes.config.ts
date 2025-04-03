@@ -21,7 +21,8 @@ export const publicRoutes: Record<string, RouteConfig> = {
     routeKey: 'HOME',
     metadata: {
       title: 'Home | Rubrion Web Client',
-      description: 'Welcome to Rubrion Web Client - A modern web application template',
+      description:
+        'Welcome to Rubrion Web Client - A modern web application template',
       keywords: ['react', 'typescript', 'vite', 'template'],
     },
   },
@@ -64,7 +65,8 @@ export const blogRoutes: Record<string, RouteConfig> = {
       description: 'Read our latest articles and insights',
       keywords: ['blog', 'article', 'post'],
     },
-    generatePath: (params: Record<string, string | number>) => `/blog/${params.slug}`,
+    generatePath: (params: Record<string, string | number>) =>
+      `/blog/${params.slug}`,
   },
 };
 
@@ -96,7 +98,8 @@ export const protectedRoutes: Record<string, RouteConfig> = {
       description: 'View user profile',
       keywords: ['user', 'profile'],
     },
-    generatePath: (params: Record<string, string | number>) => `/users/${params.userId}`,
+    generatePath: (params: Record<string, string | number>) =>
+      `/users/${params.userId}`,
   },
 };
 

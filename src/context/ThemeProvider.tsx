@@ -1,18 +1,13 @@
-import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
-import { darkTheme, lightTheme, Theme } from '../theme';
+import { darkTheme, lightTheme } from '../theme';
+import { ThemeContext } from './ThemeContext';
 
-export interface ThemeContextType {
-  theme: Theme;
-  isDarkMode: boolean;
-  toggleTheme: () => void;
+export interface ThemeProviderProps {
+  children: ReactNode;
 }
 
-// Create the context
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-// Theme provider component
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -40,4 +35,4 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       {children}
     </ThemeContext.Provider>
   );
-}
+};
