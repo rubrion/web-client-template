@@ -5,10 +5,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './setupTests.ts',
-    exclude: ['node_modules', 'dist'],
     coverage: {
       provider: 'istanbul',
       reportsDirectory: './coverage',
+      exclude: ['node_modules/', 'src/mocks/browser.ts'],
     },
   },
 });
