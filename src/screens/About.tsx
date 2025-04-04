@@ -1,4 +1,4 @@
-import { Box, Container, Grid2 } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,15 +21,18 @@ const About: React.FC = () => {
             text: 'Meet Our Team',
             onClick: () =>
               navigate(
-                createScrollRoute(ROUTES.PUBLIC.TEAMDETAILS.path, 'team-details-section')
+                createScrollRoute(
+                  ROUTES.PUBLIC.TEAMDETAILS.path,
+                  'team-details-section'
+                )
               ),
           },
         ]}
       />
 
       <Container id="our-story-section" maxWidth="lg" sx={{ my: 8 }}>
-        <Grid2 container spacing={6}>
-          <Grid2 size={gridSizes.halfWidth}>
+        <Grid container spacing={6}>
+          <Grid size={gridSizes.halfWidth}>
             <Box>
               <h2>Our Story</h2>
               <p>
@@ -43,8 +46,8 @@ const About: React.FC = () => {
                 difference in people's lives.
               </p>
             </Box>
-          </Grid2>
-          <Grid2 size={gridSizes.halfWidth}>
+          </Grid>
+          <Grid size={gridSizes.halfWidth}>
             <Box
               sx={{
                 backgroundImage: `url('about-story.png')`,
@@ -54,8 +57,8 @@ const About: React.FC = () => {
                 borderRadius: 2,
               }}
             />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
 
       <CTASection
@@ -63,7 +66,7 @@ const About: React.FC = () => {
         title="What We Stand For"
         subtitle="Our core values guide everything we do\nand shape our company culture."
       >
-        <Grid2 container spacing={4} justifyContent="center">
+        <Grid container spacing={4} justifyContent="center">
           {[
             {
               title: 'Innovation',
@@ -84,7 +87,7 @@ const About: React.FC = () => {
               description: 'Working together to achieve common goals.',
             },
           ].map((value, index) => (
-            <Grid2 size={gridSizes.quarterWidth} key={index}>
+            <Grid size={gridSizes.quarterWidth} key={index}>
               <Box
                 sx={{
                   p: 3,
@@ -97,9 +100,9 @@ const About: React.FC = () => {
                 <h3>{value.title}</h3>
                 <p>{value.description}</p>
               </Box>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CTASection>
     </Box>
   );

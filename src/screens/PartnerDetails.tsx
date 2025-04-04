@@ -3,7 +3,7 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Grid2,
+  Grid,
   Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -61,11 +61,13 @@ const PartnerDetails: React.FC = () => {
         overline="PARTNERS"
         title="Meet Our Partners"
         buttonText="Become Partner"
-        onButtonClick={() => navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=partner`)}
+        onButtonClick={() =>
+          navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=partner`)
+        }
       >
-        <Grid2 container spacing={4}>
+        <Grid container spacing={4}>
           {partners.map((partner) => (
-            <Grid2 size={gridSizes.thirdWidth} key={partner.id}>
+            <Grid size={gridSizes.thirdWidth} key={partner.id}>
               <Card
                 sx={{
                   height: '100%',
@@ -104,10 +106,15 @@ const PartnerDetails: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+        </Grid>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ mt: 6 }}
+        >
           Join us in building something great together
         </Typography>
       </CTASection>

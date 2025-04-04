@@ -1,36 +1,45 @@
-import React, { useEffect } from 'react';
+import { Box } from '@mui/material';
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
-const PageHelmet = ({
+interface PageHelmetProps {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  children?: React.ReactNode;
+}
+
+const PageHelmet: React.FC<PageHelmetProps> = ({
   title,
   description,
+  canonicalUrl,
   children,
-}: {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
 }) => {
-  useEffect(() => {
-    if (!title) {
-      console.warn("PageHelmet: 'title' is missing or undefined.");
-      return;
-    }
+  const siteTitle = 'Business Solutions';
+  const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+  const pageDescription =
+    description ||
+    'Professional business solutions customized for your company needs.';
 
-    document.title = title;
-
-    if (description) {
-      let metaDescription = document.querySelector(
-        'meta[name="description"]'
-      ) as HTMLMetaElement | null;
-      if (!metaDescription) {
-        metaDescription = document.createElement('meta') as HTMLMetaElement;
-        metaDescription.name = 'description';
-        document.head.appendChild(metaDescription);
-      }
-      metaDescription.setAttribute('content', description);
-    }
-  }, [title, description]);
-
-  return <>{children}</>;
+  return (
+    <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      </Helmet>
+      <Box
+        sx={{
+          width: '100%',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {children}
+      </Box>
+    </>
+  );
 };
 
 export default PageHelmet;

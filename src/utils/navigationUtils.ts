@@ -4,7 +4,10 @@
  * @param scrollTarget The ID of the element to scroll to
  * @returns The complete URL with scroll parameter
  */
-export const createScrollRoute = (path: string, scrollTarget?: string): string => {
+export const createScrollRoute = (
+  path: string,
+  scrollTarget?: string
+): string => {
   if (!scrollTarget) return path;
   return `${path}?scrollTo=${scrollTarget}`;
 };
@@ -27,27 +30,27 @@ export const createScrollToTopRoute = (path: string): string => {
  * @returns The complete URL with all parameters
  */
 export const createRouteWithParams = (
-  path: string, 
-  params: Record<string, string> = {}, 
+  path: string,
+  params: Record<string, string> = {},
   scrollTarget?: string,
   scrollToTop?: boolean
 ): string => {
   const searchParams = new URLSearchParams();
-  
+
   // Add all regular params
   Object.entries(params).forEach(([key, value]) => {
     searchParams.append(key, value);
   });
-  
+
   // Add scroll parameters
   if (scrollTarget) {
     searchParams.append('scrollTo', scrollTarget);
   }
-  
+
   if (scrollToTop) {
     searchParams.append('scrollToTop', 'true');
   }
-  
+
   const queryString = searchParams.toString();
   return queryString ? `${path}?${queryString}` : path;
 };

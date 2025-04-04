@@ -4,7 +4,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid2,
+  Grid,
   Typography,
 } from '@mui/material';
 import React from 'react';
@@ -76,19 +76,20 @@ const Portfolio: React.FC = () => {
           {
             text: 'Know Our Services',
             onClick: () =>
-              navigate(createScrollRoute(ROUTES.PUBLIC.SERVICES.path, 'services-section')),
+              navigate(
+                createScrollRoute(
+                  ROUTES.PUBLIC.SERVICES.path,
+                  'services-section'
+                )
+              ),
           },
         ]}
       />
 
-      <CTASection
-        overline="SHOWCASE"
-        title="Featured Projects"
-        maxWidth="lg"
-      >
-        <Grid2 container spacing={4}>
+      <CTASection overline="SHOWCASE" title="Featured Projects" maxWidth="lg">
+        <Grid container spacing={4}>
           {projects.map((project) => (
-            <Grid2 size={gridSizes.thirdWidth} key={project.id}>
+            <Grid size={gridSizes.thirdWidth} key={project.id}>
               <Card
                 sx={{
                   height: '100%',
@@ -118,9 +119,9 @@ const Portfolio: React.FC = () => {
                   <Typography variant="body2">{project.description}</Typography>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CTASection>
     </Box>
   );

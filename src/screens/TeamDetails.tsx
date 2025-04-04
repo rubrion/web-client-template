@@ -1,15 +1,10 @@
-import {
-  Box,
-  Container,
-  Grid2,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { CTASection, Navbar } from '../components/ui';
-import { useScrollTo } from '../hooks/useScrollTo';
 import TeamCard from '../components/ui/Card/TeamCard';
+import { useScrollTo } from '../hooks/useScrollTo';
 import ROUTES from '../routes';
 import { gridSizes } from '../theme/themeUtils';
 
@@ -114,14 +109,19 @@ const TeamDetails: React.FC = () => {
         buttonText="Join Our Team"
         onButtonClick={() => navigate(ROUTES.PUBLIC.TEAMJOIN.path)}
       >
-        <Grid2 container spacing={4}>
+        <Grid container spacing={4}>
           {teamMembers.map((member) => (
-            <Grid2 size={gridSizes.thirdWidth} key={member.id}>
+            <Grid size={gridSizes.thirdWidth} key={member.id}>
               <TeamCard member={member} variant="detailed" />
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+        </Grid>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ mt: 6 }}
+        >
           We'd love to learn more about you — send in your application today!
         </Typography>
       </CTASection>

@@ -72,7 +72,7 @@ export const getContrastText = (backgroundColor: string) => {
   // Simple implementation - for a full solution, calculate color luminance
   return backgroundColor.startsWith('#') && backgroundColor.length >= 7
     ? parseInt(backgroundColor.slice(1, 7), 16) > 0xffffff / 2
-      ? '#000000' 
+      ? '#000000'
       : '#ffffff'
     : '#ffffff';
 };

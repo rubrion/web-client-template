@@ -9,11 +9,7 @@ interface ScrollOptions {
 
 export const useScrollTo = (options: ScrollOptions = {}) => {
   const location = useLocation();
-  const { 
-    behavior = 'smooth', 
-    block = 'start', 
-    delay = 100 
-  } = options;
+  const { behavior = 'smooth', block = 'start', delay = 100 } = options;
 
   const scrollToElement = (elementId: string): boolean => {
     const element = document.getElementById(elementId);
@@ -30,7 +26,7 @@ export const useScrollTo = (options: ScrollOptions = {}) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior });
   };
-  
+
   // For direct usage with navigation
   const getScrollParams = (elementId: string): string => {
     return `?scrollTo=${elementId}`;
@@ -44,11 +40,11 @@ export const useScrollTo = (options: ScrollOptions = {}) => {
     // Check URL parameters
     const params = new URLSearchParams(location.search);
     const scrollToId = params.get('scrollTo');
-    
+
     if (scrollToId) {
       // Attempt to scroll to the element
       const success = scrollToElement(scrollToId);
-      
+
       // If element not found immediately, try again after a longer delay
       // This helps with elements that might load dynamically
       if (!success) {
@@ -64,6 +60,6 @@ export const useScrollTo = (options: ScrollOptions = {}) => {
     scrollToElement,
     scrollToTop,
     getScrollParams,
-    getScrollToTopParams
+    getScrollToTopParams,
   };
 };

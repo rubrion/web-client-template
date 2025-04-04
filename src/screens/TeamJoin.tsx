@@ -4,7 +4,7 @@ import {
   Container,
   FormControl,
   FormHelperText,
-  Grid2,
+  Grid,
   InputLabel,
   MenuItem,
   Paper,
@@ -113,8 +113,8 @@ const TeamJoin: React.FC = () => {
     <Box>
       <Navbar />
       <Container maxWidth="lg" sx={{ my: 8 }}>
-        <Grid2 container spacing={6}>
-          <Grid2 size={gridSizes.halfWidth}>
+        <Grid container spacing={6}>
+          <Grid size={gridSizes.halfWidth}>
             <Typography variant="h3" gutterBottom>
               Join Our Team
             </Typography>
@@ -158,9 +158,9 @@ const TeamJoin: React.FC = () => {
                 • Marketing Specialists
               </Typography>
             </Box>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={gridSizes.halfWidth}>
+          <Grid size={gridSizes.halfWidth}>
             <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
               <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
                 Application Form
@@ -188,8 +188,8 @@ const TeamJoin: React.FC = () => {
               )}
 
               <form onSubmit={handleSubmit}>
-                <Grid2 container spacing={3}>
-                  <Grid2 size={gridSizes.halfWidth}>
+                <Grid container spacing={3}>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="Full Name"
@@ -198,8 +198,8 @@ const TeamJoin: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
-                  <Grid2 size={gridSizes.halfWidth}>
+                  </Grid>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="Email"
@@ -209,8 +209,8 @@ const TeamJoin: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
-                  <Grid2 size={gridSizes.halfWidth}>
+                  </Grid>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="Phone Number"
@@ -218,9 +218,9 @@ const TeamJoin: React.FC = () => {
                       value={formData.phone}
                       onChange={handleChange}
                     />
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.halfWidth}>
+                  <Grid size={gridSizes.halfWidth}>
                     <FormControl fullWidth required>
                       <InputLabel id="position-label">Position</InputLabel>
                       <Select
@@ -237,9 +237,9 @@ const TeamJoin: React.FC = () => {
                         ))}
                       </Select>
                     </FormControl>
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.halfWidth}>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="GitHub Profile"
@@ -248,9 +248,9 @@ const TeamJoin: React.FC = () => {
                       onChange={handleChange}
                       placeholder="https://github.com/username"
                     />
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.halfWidth}>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="LinkedIn Profile"
@@ -259,9 +259,9 @@ const TeamJoin: React.FC = () => {
                       onChange={handleChange}
                       placeholder="https://linkedin.com/in/username"
                     />
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -286,9 +286,9 @@ const TeamJoin: React.FC = () => {
                         Accept PDF, DOC, or DOCX files (max 5MB)
                       </FormHelperText>
                     </Box>
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <TextField
                       fullWidth
                       label="Why do you want to join our team?"
@@ -299,9 +299,9 @@ const TeamJoin: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -312,12 +312,12 @@ const TeamJoin: React.FC = () => {
                     >
                       {loading ? 'Submitting...' : 'Submit Application'}
                     </Button>
-                  </Grid2>
-                </Grid2>
+                  </Grid>
+                </Grid>
               </form>
             </Paper>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );

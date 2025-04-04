@@ -3,7 +3,7 @@ import {
   Button,
   Container,
   FormControl,
-  Grid2,
+  Grid,
   InputLabel,
   MenuItem,
   Paper,
@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Navbar } from '../components/ui';
@@ -22,7 +22,7 @@ import { gridSizes } from '../theme/themeUtils';
 const SUBJECT_OPTIONS = {
   PARTNER: 'Become a Partner',
   SERVICES: 'Contract Services',
-  OTHER: 'Other'
+  OTHER: 'Other',
 };
 
 const Contact: React.FC = () => {
@@ -45,9 +45,17 @@ const Contact: React.FC = () => {
     const preselectedSubject = params.get('subject');
 
     if (preselectedSubject === 'partner') {
-      setFormData(prev => ({ ...prev, subject: SUBJECT_OPTIONS.PARTNER, customSubject: '' }));
+      setFormData((prev) => ({
+        ...prev,
+        subject: SUBJECT_OPTIONS.PARTNER,
+        customSubject: '',
+      }));
     } else if (preselectedSubject === 'services') {
-      setFormData(prev => ({ ...prev, subject: SUBJECT_OPTIONS.SERVICES, customSubject: '' }));
+      setFormData((prev) => ({
+        ...prev,
+        subject: SUBJECT_OPTIONS.SERVICES,
+        customSubject: '',
+      }));
     }
   }, [location]);
 
@@ -64,7 +72,7 @@ const Contact: React.FC = () => {
       ...prev,
       subject: value,
       // Reset customSubject when a predefined option is selected
-      customSubject: value === SUBJECT_OPTIONS.OTHER ? prev.customSubject : ''
+      customSubject: value === SUBJECT_OPTIONS.OTHER ? prev.customSubject : '',
     }));
   };
 
@@ -87,19 +95,26 @@ const Contact: React.FC = () => {
     e.preventDefault();
 
     // Determine final subject value
-    const finalSubject = formData.subject === SUBJECT_OPTIONS.OTHER
-      ? formData.customSubject
-      : formData.subject;
+    const finalSubject =
+      formData.subject === SUBJECT_OPTIONS.OTHER
+        ? formData.customSubject
+        : formData.subject;
 
     // In a real application, you would send the form data and file to a server
     console.log('Form submitted:', {
       ...formData,
       finalSubject,
-      attachment: selectedFile
+      attachment: selectedFile,
     });
 
     // Reset form after submission
-    setFormData({ name: '', email: '', subject: '', customSubject: '', message: '' });
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      customSubject: '',
+      message: '',
+    });
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
 
@@ -110,8 +125,8 @@ const Contact: React.FC = () => {
     <Box>
       <Navbar />
       <Container maxWidth="lg" sx={{ my: 8 }}>
-        <Grid2 container spacing={6}>
-          <Grid2 size={gridSizes.halfWidth}>
+        <Grid container spacing={6}>
+          <Grid size={gridSizes.halfWidth}>
             <Typography variant="h3" gutterBottom>
               Get In Touch
             </Typography>
@@ -146,16 +161,16 @@ const Contact: React.FC = () => {
                 Saturday - Sunday: Closed
               </Typography>
             </Box>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={gridSizes.halfWidth}>
+          <Grid size={gridSizes.halfWidth}>
             <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
               <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
                 Send us a message
               </Typography>
               <form onSubmit={handleSubmit}>
-                <Grid2 container spacing={3}>
-                  <Grid2 size={gridSizes.halfWidth}>
+                <Grid container spacing={3}>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="Name"
@@ -164,8 +179,8 @@ const Contact: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
-                  <Grid2 size={gridSizes.halfWidth}>
+                  </Grid>
+                  <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
                       label="Email"
@@ -175,8 +190,8 @@ const Contact: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
-                  <Grid2 size={gridSizes.fullWidth}>
+                  </Grid>
+                  <Grid size={gridSizes.fullWidth}>
                     <FormControl fullWidth required>
                       <InputLabel id="subject-label">Subject</InputLabel>
                       <Select
@@ -187,15 +202,19 @@ const Contact: React.FC = () => {
                         label="Subject"
                         onChange={handleSubjectChange}
                       >
-                        <MenuItem value={SUBJECT_OPTIONS.PARTNER}>Become a Partner</MenuItem>
-                        <MenuItem value={SUBJECT_OPTIONS.SERVICES}>Contract Services</MenuItem>
+                        <MenuItem value={SUBJECT_OPTIONS.PARTNER}>
+                          Become a Partner
+                        </MenuItem>
+                        <MenuItem value={SUBJECT_OPTIONS.SERVICES}>
+                          Contract Services
+                        </MenuItem>
                         <MenuItem value={SUBJECT_OPTIONS.OTHER}>Other</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid2>
+                  </Grid>
 
                   {formData.subject === SUBJECT_OPTIONS.OTHER && (
-                    <Grid2 size={gridSizes.fullWidth}>
+                    <Grid size={gridSizes.fullWidth}>
                       <TextField
                         fullWidth
                         label="Custom Subject"
@@ -204,10 +223,10 @@ const Contact: React.FC = () => {
                         onChange={handleChange}
                         required={formData.subject === SUBJECT_OPTIONS.OTHER}
                       />
-                    </Grid2>
+                    </Grid>
                   )}
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <TextField
                       fullWidth
                       label="Message"
@@ -218,16 +237,14 @@ const Contact: React.FC = () => {
                       onChange={handleChange}
                       required
                     />
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <Box sx={{ mb: 2 }}>
-                      <Button
-                        variant="outlined"
-                        component="label"
-                        fullWidth
-                      >
-                        {selectedFile ? selectedFile.name : "Attach File (5MB max)"}
+                      <Button variant="outlined" component="label" fullWidth>
+                        {selectedFile
+                          ? selectedFile.name
+                          : 'Attach File (5MB max)'}
                         <input
                           ref={fileInputRef}
                           type="file"
@@ -236,19 +253,27 @@ const Contact: React.FC = () => {
                         />
                       </Button>
                       {fileError && (
-                        <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                        <Typography
+                          color="error"
+                          variant="caption"
+                          sx={{ mt: 1 }}
+                        >
                           {fileError}
                         </Typography>
                       )}
                       {selectedFile && (
-                        <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
-                          File size: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                        <Typography
+                          variant="caption"
+                          sx={{ display: 'block', mt: 1 }}
+                        >
+                          File size:{' '}
+                          {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
                         </Typography>
                       )}
                     </Box>
-                  </Grid2>
+                  </Grid>
 
-                  <Grid2 size={gridSizes.fullWidth}>
+                  <Grid size={gridSizes.fullWidth}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -258,12 +283,12 @@ const Contact: React.FC = () => {
                     >
                       Send Message
                     </Button>
-                  </Grid2>
-                </Grid2>
+                  </Grid>
+                </Grid>
               </form>
             </Paper>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );

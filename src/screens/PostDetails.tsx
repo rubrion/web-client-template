@@ -73,10 +73,7 @@ const PostDetail: React.FC = () => {
             Post not found
           </Typography>
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              onClick={handleBackToBlog}
-            >
+            <Button variant="contained" onClick={handleBackToBlog}>
               Back to Blog
             </Button>
           </Box>

@@ -5,7 +5,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid2,
+  Grid,
   Pagination,
   Typography,
 } from '@mui/material';
@@ -50,11 +50,20 @@ const Blog: React.FC = () => {
     const getPosts = async () => {
       setLoading(true);
       try {
-        console.log(`Fetching posts for page ${page} with limit ${postsPerPage}`);
+        console.log(
+          `Fetching posts for page ${page} with limit ${postsPerPage}`
+        );
         const data = await fetchBlogPosts(page, postsPerPage);
 
-        if (typeof data === 'object' && data !== null && 'posts' in data && 'totalPages' in data) {
-          console.log(`Received ${data.posts.length} posts from pagination data`);
+        if (
+          typeof data === 'object' &&
+          data !== null &&
+          'posts' in data &&
+          'totalPages' in data
+        ) {
+          console.log(
+            `Received ${data.posts.length} posts from pagination data`
+          );
           console.log(`Total pages: ${data.totalPages}`);
 
           setPosts(data.posts);
@@ -72,18 +81,24 @@ const Blog: React.FC = () => {
           }
         } else {
           // This branch should not be used if we're using the mock pagination correctly
-          console.log("Received non-paginated data, performing client-side pagination");
+          console.log(
+            'Received non-paginated data, performing client-side pagination'
+          );
           const allPosts = Array.isArray(data) ? data : [];
           console.log(`Total posts: ${allPosts.length}`);
 
-          const calculatedTotalPages = Math.ceil(allPosts.length / postsPerPage);
+          const calculatedTotalPages = Math.ceil(
+            allPosts.length / postsPerPage
+          );
           console.log(`Calculated total pages: ${calculatedTotalPages}`);
 
           // Perform client-side pagination as fallback
           const startIndex = (page - 1) * postsPerPage;
           const endIndex = startIndex + postsPerPage;
           const paginatedPosts = allPosts.slice(startIndex, endIndex);
-          console.log(`Showing posts from index ${startIndex} to ${endIndex - 1}`);
+          console.log(
+            `Showing posts from index ${startIndex} to ${endIndex - 1}`
+          );
           console.log(`Paginated posts length: ${paginatedPosts.length}`);
 
           setPosts(paginatedPosts);
@@ -182,7 +197,11 @@ const Blog: React.FC = () => {
           <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
             No Blog Posts Available
           </Typography>
-          <Typography variant="body1" component="p" sx={{ textAlign: 'center' }}>
+          <Typography
+            variant="body1"
+            component="p"
+            sx={{ textAlign: 'center' }}
+          >
             Check back soon for new content!
           </Typography>
         </Container>
@@ -210,7 +229,7 @@ const Blog: React.FC = () => {
       />
 
       <CTASection
-        id="articles-section"  // Add this ID for scrolling
+        id="articles-section" // Add this ID for scrolling
         overline="ARTICLES"
         title="Latest Articles"
         maxWidth="lg"
@@ -219,9 +238,9 @@ const Blog: React.FC = () => {
           <LoadingIndicator message="Updating posts" />
         ) : (
           <>
-            <Grid2 container spacing={4}>
+            <Grid container spacing={4}>
               {posts.map((post) => (
-                <Grid2 size={gridSizes.thirdWidth} key={post.id}>
+                <Grid size={gridSizes.thirdWidth} key={post.id}>
                   <Card
                     sx={{
                       height: '100%',
@@ -243,7 +262,12 @@ const Blog: React.FC = () => {
                       <Typography gutterBottom variant="h5" component="h2">
                         {post.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" component="p" sx={{ mb: 2 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        component="p"
+                        sx={{ mb: 2 }}
+                      >
                         {post.summary}
                       </Typography>
                       <Button
@@ -257,9 +281,9 @@ const Blog: React.FC = () => {
                       </Button>
                     </CardContent>
                   </Card>
-                </Grid2>
+                </Grid>
               ))}
-            </Grid2>
+            </Grid>
 
             {totalPages > 1 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>

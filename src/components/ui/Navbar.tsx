@@ -1,177 +1,169 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
   Button,
   Container,
-  Drawer,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
-import ROUTES from '../../routes';
+import { useTheme as useAppTheme } from '../../context/useTheme';
 
-interface NavItem {
-  label: string;
-  path: string;
-}
+// Menu Icon as a simple SVG component to avoid dependency on @mui/icons-material
+const MenuIcon: React.FC = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M3 12h18M3 6h18M3 18h18"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// Logo component
+const Logo: React.FC = () => {
+  const theme = useTheme();
+
+  return (
+    <Typography
+      variant="h6"
+      component={RouterLink}
+      to="/"
+      sx={{
+        fontWeight: 700,
+        color: 'inherit',
+        textDecoration: 'none',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      Business Solutions
+    </Typography>
+  );
+};
 
 interface NavbarProps {
   transparent?: boolean;
-  logoSrc?: string;
-  logoText?: string;
-  navItems?: NavItem[];
 }
 
-const defaultNavItems: NavItem[] = [
-  { label: 'Home', path: ROUTES.PUBLIC.HOME.path },
-  { label: 'Portfolio', path: ROUTES.PUBLIC.PORTFOLIO.path },
-  { label: 'Blog', path: ROUTES.BLOG.LIST.path },
-  { label: 'Services', path: ROUTES.PUBLIC.SERVICES.path },
-  { label: 'Contact', path: ROUTES.PUBLIC.CONTACT.path },
-];
+const pages = ['Home', 'About', 'Services', 'Contact'];
 
-const Navbar: React.FC<NavbarProps> = ({
-  transparent = false,
-  logoSrc = '/logo.svg',
-  logoText = 'Start',
-  navItems = defaultNavItems,
-}) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const Navbar: React.FC<NavbarProps> = ({ transparent = false }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { themeMode } = useAppTheme();
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        {logoText}
-      </Typography>
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item.label} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={item.path}
-              sx={{
-                textAlign: 'center',
-                py: 1.5,
-                '&:hover': {
-                  backgroundColor: `${theme.palette.primary.light}14`,
-                },
-              }}
-            >
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
   return (
-    <>
-      <AppBar
-        position="static"
-        sx={{
-          bgcolor: transparent ? 'transparent' : 'primary.main',
-          paddingTop: '32px',
-          paddingBottom: '32px',
-          [theme.breakpoints.down('md')]: {
-            paddingTop: '16px',
-            paddingBottom: '16px',
-          },
-        }}
-      >
-        <Container
-          maxWidth="lg"
-          disableGutters
-        >
-          <Toolbar
-            sx={{
-              justifyContent: 'space-between',
-              flexWrap: 'nowrap',
-              minHeight: { xs: '48px', sm: '64px' },
-              p: 0,
-              pl: 0,
-              pr: { xs: 1, sm: 1 }
-            }}
-          >
-            <Box
-              component={Link}
-              to={ROUTES.PUBLIC.HOME.path}
+    <AppBar
+      position="static"
+      elevation={transparent ? 0 : 2}
+      sx={{
+        background: transparent
+          ? 'transparent'
+          : theme.palette.background.paper,
+        color: theme.palette.text.primary,
+      }}
+    >
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          {/* Logo for desktop */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
+            <Logo />
+          </Box>
+
+          {/* Mobile menu */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="menu"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                textDecoration: 'none',
-                '&:hover': {
-                  opacity: 0.9
-                }
+                display: { xs: 'block', md: 'none' },
               }}
             >
-              <img width={70} height={48} alt="Logo" src={logoSrc} />
-              <Typography
-                variant="h4"
-                sx={{ fontWeight: 500, color: 'primary.contrastText' }}
-              >
-                {logoText}
-              </Typography>
-            </Box>
-            {isMobile ? (
-              <IconButton color="inherit" onClick={handleDrawerToggle} edge="end">
-                <MenuIcon />
-              </IconButton>
-            ) : (
-              <Box
-                component="nav"
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'nowrap',
-                  overflow: 'hidden'
-                }}
-              >
-                {navItems.map((item) => (
-                  <Button
-                    key={item.label}
-                    component={Link}
-                    to={item.path}
-                    sx={{ color: 'primary.contrastText', mx: 0.75, whiteSpace: 'nowrap' }}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
-              </Box>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
 
-      <Drawer
-        anchor="right"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
-        }}
-      >
-        {drawer}
-      </Drawer>
-    </>
+          {/* Logo for mobile */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Logo />
+          </Box>
+
+          {/* Desktop menu */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center',
+            }}
+          >
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ mx: 1, my: 2, color: 'inherit', display: 'block' }}
+                component={RouterLink}
+                to={`/${page.toLowerCase()}`}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+
+          {/* Right side of navbar - can add actions here */}
+          <Box sx={{ flexGrow: 0 }}>
+            {/* Optional: Add user menu or other controls here */}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 

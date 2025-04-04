@@ -5,7 +5,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid2,
+  Grid,
   Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -87,9 +87,9 @@ const Services: React.FC = () => {
         title="What We Offer"
         maxWidth="lg"
       >
-        <Grid2 container spacing={4}>
+        <Grid container spacing={4}>
           {services.map((service) => (
-            <Grid2 size={gridSizes.quarterWidth} key={service.id}>
+            <Grid size={gridSizes.quarterWidth} key={service.id}>
               <Card sx={{ height: '100%' }}>
                 <CardMedia
                   component="div"
@@ -115,7 +115,12 @@ const Services: React.FC = () => {
                   <Typography gutterBottom variant="h5" component="h2">
                     {service.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" component="p" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    component="p"
+                    sx={{ mb: 2 }}
+                  >
                     {service.description}
                   </Typography>
                   <Typography variant="body2" component="div">
@@ -127,9 +132,9 @@ const Services: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CTASection>
 
       <CTASection
@@ -137,9 +142,11 @@ const Services: React.FC = () => {
         title="How We Work"
         subtitle="Our streamlined process ensures efficient\nand effective delivery of your project."
         buttonText="Get Started"
-        onButtonClick={() => navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=services`)}
+        onButtonClick={() =>
+          navigate(`${ROUTES.PUBLIC.CONTACT.path}?subject=services`)
+        }
       >
-        <Grid2 container spacing={2} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center">
           {[
             {
               phase: 'Discovery',
@@ -167,7 +174,7 @@ const Services: React.FC = () => {
                 'We deploy your solution and provide ongoing support.',
             },
           ].map((step, index) => (
-            <Grid2 size={gridSizes.thirdWidth} key={index}>
+            <Grid size={gridSizes.thirdWidth} key={index}>
               <Box
                 sx={{
                   p: 3,
@@ -195,10 +202,15 @@ const Services: React.FC = () => {
                 </Typography>
                 <Typography variant="body2">{step.description}</Typography>
               </Box>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 6 }}>
+        </Grid>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ mt: 6 }}
+        >
           Tell us what you need — we'll deliver tailored solutions for your
           business.
         </Typography>

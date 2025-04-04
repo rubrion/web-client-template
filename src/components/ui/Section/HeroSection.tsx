@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   Container,
-  Grid2,
+  Grid,
   styled,
   Typography,
   useTheme,
@@ -116,10 +116,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       <Navbar /> {/* Add Navbar component */}
       <StyledHeroSection ref={heroRef}>
         <Container maxWidth="lg">
-          <Grid2 container spacing={8} sx={{ alignItems: 'flex-start' }}>
+          <Grid container spacing={8} sx={{ alignItems: 'flex-start' }}>
             {' '}
             {/* Align items at the top */}
-            <Grid2 size={gridSizes.hero.content}>
+            <Grid size={gridSizes.hero.content}>
               <Typography
                 variant="overline"
                 sx={{ letterSpacing: theme.typography.overline.letterSpacing }}
@@ -169,9 +169,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   ))}
                 </Box>
               )}
-            </Grid2>
+            </Grid>
             {/* Right Section - Image */}
-            <Grid2
+            <Grid
               size={gridSizes.hero.image}
               sx={{ display: 'flex', justifyContent: 'flex-start' }}
             >
@@ -186,8 +186,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   alignSelf: 'flex-start', // Align image at the top
                 }}
               />
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </Container>
         {showArrow && <ArrowDown show={showArrow} onClick={handleScroll} />}
       </StyledHeroSection>

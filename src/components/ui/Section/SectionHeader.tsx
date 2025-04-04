@@ -17,7 +17,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   const theme = useTheme();
 
   return (
-    <Box sx={{ textAlign: align, mb: 4 }}>  {/* Reduced from 6 to 4 */}
+    <Box sx={{ textAlign: align, mb: 4 }}>
+      {' '}
+      {/* Reduced from 6 to 4 */}
       <Typography variant="overline" sx={{ color: theme.palette.primary.main }}>
         {overline}
       </Typography>

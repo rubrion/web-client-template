@@ -1,4 +1,4 @@
-import { Grid2, Grid2Props } from '@mui/material';
+import { Grid, GridProps } from '@mui/material';
 import React from 'react';
 
 import { gridSizes } from '../../theme/themeUtils';
@@ -14,7 +14,7 @@ interface GridItemConfig {
 interface GridLayoutProps {
   items: React.ReactNode[];
   itemProps?: GridItemConfig;
-  containerProps?: Omit<Grid2Props, 'container'>;
+  containerProps?: Omit<GridProps, 'container'>;
   justifyContent?:
     | 'flex-start'
     | 'center'
@@ -33,18 +33,18 @@ const GridLayout: React.FC<GridLayoutProps> = ({
   containerProps,
 }) => {
   return (
-    <Grid2
+    <Grid
       container
       spacing={spacing}
       justifyContent={justifyContent}
       {...containerProps}
     >
       {items.map((item, index) => (
-        <Grid2 key={index} size={itemProps}>
+        <Grid key={index} size={itemProps}>
           {item}
-        </Grid2>
+        </Grid>
       ))}
-    </Grid2>
+    </Grid>
   );
 };
 

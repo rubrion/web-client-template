@@ -35,7 +35,7 @@ export const generateBlogPost = (id: string) => {
 };
 
 export const mockBlogPosts: MockedBlogPost[] = Array.from(
-  { length: 30 },  // Increase to 30 posts for better pagination testing
+  { length: 30 }, // Increase to 30 posts for better pagination testing
   (_, i) => {
     const id = (i + 1).toString();
     return generateBlogPost(id);

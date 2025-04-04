@@ -1,30 +1,29 @@
-// theme.ts
 import { createTheme } from '@mui/material/styles';
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
-      main: '#1976d2', // Keep your brand blue color
-      light: '#42a5f5',
-      dark: '#1565c0',
-      contrastText: '#ffffff',
+      main: '#90caf9', // Lighter blue for dark mode
+      light: '#e3f2fd',
+      dark: '#42a5f5',
+      contrastText: '#0a1929',
     },
     secondary: {
-      main: '#9c27b0', // Secondary accent color
-      light: '#ba68c8',
-      dark: '#7b1fa2',
-      contrastText: '#ffffff',
+      main: '#ce93d8', // Lighter secondary for dark mode
+      light: '#f3e5f5',
+      dark: '#ab47bc',
+      contrastText: '#0a1929',
     },
     background: {
-      default: '#f8fafc',
-      paper: '#ffffff',
+      default: '#0f172a', // Deep blue background
+      paper: '#1e293b', // Slightly lighter blue for cards/paper
     },
     text: {
-      primary: '#0f172a',
-      secondary: '#64748b',
+      primary: '#f8fafc',
+      secondary: '#cbd5e1',
     },
-    divider: 'rgba(0, 0, 0, 0.12)',
+    divider: 'rgba(255, 255, 255, 0.12)',
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -83,9 +82,9 @@ const lightTheme = createTheme({
           transition: 'all 0.2s ease-in-out',
         },
         contained: {
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
           '&:hover': {
-            boxShadow: '0 6px 10px rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',
             transform: 'translateY(-1px)',
           },
         },
@@ -95,10 +94,10 @@ const lightTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
           transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
           '&:hover': {
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
             transform: 'translateY(-4px)',
           },
         },
@@ -114,4 +113,4 @@ const lightTheme = createTheme({
   },
 });
 
-export default lightTheme;
+export default darkTheme;
