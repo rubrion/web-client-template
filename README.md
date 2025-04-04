@@ -17,6 +17,7 @@ A comprehensive React + TypeScript frontend starter template with built-in routi
   - [Installation](#installation)
 - [Project Structure](#project-structure)
 - [How to Use](#how-to-use)
+- [Release and Deployment](#release-and-deployment)
 - [Scripts](#scripts)
 - [Setting up Blackbox for File Encryption](#setting-up-blackbox-for-file-encryption)
 
@@ -32,6 +33,9 @@ A comprehensive React + TypeScript frontend starter template with built-in routi
 - **Lazy Loading**: Code-splitting for performance
 - **Breadcrumbs**: Automatic navigation breadcrumbs
 - **EditorConfig**: Consistent coding styles across editors
+- **Material UI**: Comprehensive UI component library
+- **Automated CI/CD**: GitHub Actions for deployment and releases
+- **Release Management**: Automated versioning and changelogs
 
 ## Feature Usage Guidelines
 
@@ -100,51 +104,11 @@ This template provides many features to make development easier. However, not al
 
 ## Project Structure
 
-````markdown
+```markdown
 # Vite + React + TypeScript Template with ESLint & Prettier
 
 This template provides a consistent starting point for frontend projects built with Vite, React, and TypeScript. It integrates ESLint and Prettier to enforce code quality and style consistency across multiple development environments.
-
-## Features
-
-- **Vite**: A fast and modern build tool for development.
-- **React + TypeScript**: Scaffolding for React projects with TypeScript support.
-- **ESLint**: Configured with support for React, TypeScript, and Prettier integration.
-- **Prettier**: Ensures consistent code formatting.
-- **EditorConfig**: Standardizes indentation, line endings, and other settings across editors.
-- **Ready-to-Use Folder Structure**: Simplifies project setup.
-
-## ESLint Configuration
-
-This template includes a robust ESLint setup using the Flat Config format. The configuration supports:
-
-- The latest ECMAScript features (`ecmaVersion: 'latest'`).
-- TypeScript linting using `@typescript-eslint/parser` and `@typescript-eslint/eslint-plugin`.
-- React-specific linting with `eslint-plugin-react-hooks` and `eslint-plugin-react-refresh`.
-- Prettier integration via `eslint-plugin-prettier`, ensuring formatting issues are reported as ESLint errors.
-- Pre-configured rules for React and TypeScript development.
-
-## Prettier Configuration
-
-The template includes a `.prettierrc` file with the following settings:
-
-```json
-{
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "es5",
-  "arrowParens": "always",
-  "printWidth": 80,
-  "tabWidth": 2
-}
 ```
-````
-
-Prettier is seamlessly integrated with ESLint, so all formatting issues are reported during linting.
-
-Here's the updated **How to Use** section along with the **Scripts**:
-
----
 
 ## How to Use
 
@@ -221,7 +185,37 @@ Here's the updated **How to Use** section along with the **Scripts**:
     npm run test:ui
     ```
 
----
+## Release and Deployment
+
+This project includes a comprehensive CI/CD pipeline for releases and deployments. For detailed information about the release process, see [PIPELINE.md](./PIPELINE.md).
+
+### Main Branch Initialization
+
+When starting a new project with an empty main branch:
+
+```bash
+npm run init-main
+```
+
+This will initialize the main branch from your develop branch, allowing the deployment pipeline to function properly.
+
+### Release Process
+
+1. Make your changes on the develop branch
+2. The CI pipeline automatically creates release branches with semantic versioning
+3. To manually release a new version:
+   ```bash
+   npm run release
+   ```
+4. To create a distributable package:
+   ```bash
+   npm run package
+   ```
+   This creates a `release.zip` file containing the built application
+
+### Promoting Pre-releases to Production
+
+Use the GitHub Actions workflow "Promote Release to Production" to merge a release branch into main, triggering production deployment.
 
 ## Scripts
 
@@ -236,10 +230,11 @@ Here's the updated **How to Use** section along with the **Scripts**:
 - **`npm run test:coverage`**: Generate a coverage report for the tests.
 - **`npm run test:ui`**: Open the Vitest UI for managing and running tests interactively.
 - **`npm run setup`**: Set up editor configurations and git hooks for consistent code formatting.
+- **`npm run init-main`**: Initialize and sync the main branch from develop branch.
+- **`npm run release`**: Create a new release with proper versioning and changelog updates.
+- **`npm run package`**: Build the project and create a ZIP archive for distribution.
 
----
-
-### Setting up Blackbox for File Encryption
+## Setting up Blackbox for File Encryption
 
 To securely encrypt sensitive files in this project using **StackExchange Blackbox**, follow these steps:
 
