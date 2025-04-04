@@ -16,7 +16,8 @@
     "test:ui": "vitest --ui",
     "setup": "bash ./scripts/setup-editor.sh",
     "init-main": "bash ./scripts/init-main-branch.sh",
-    "release": "npx release-it"
+    "release": "npx release-it",
+    "package": "npm run build && cd dist && zip -r ../release.zip ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
