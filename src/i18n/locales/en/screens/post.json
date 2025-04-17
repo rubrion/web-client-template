@@ -1,0 +1,7 @@
+{
+  "loading": "Loading post details",
+  "updating": "Updating post content",
+  "notFound": "Post not found",
+  "backButton": "Back to Blog",
+  "publishedOn": "Published on {{date}} by {{author}}"
+}

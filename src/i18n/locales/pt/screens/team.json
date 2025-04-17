@@ -1,0 +1,38 @@
+{
+  "details": {
+    "overline": "EQUIPE",
+    "title": "Conheça Nossos Especialistas",
+    "buttonText": "Junte-se à Nossa Equipe",
+    "footer": "Adoraríamos saber mais sobre você — envie sua inscrição hoje!",
+    "members": [
+      {
+        "id": 1,
+        "name": "Peg Legge",
+        "role": "CEO",
+        "image": "mask-group.png",
+        "bio": "Peg tem mais de 15 anos de experiência na indústria de tecnologia e liderou várias startups de sucesso. Ela supervisiona a direção estratégica e as iniciativas de crescimento da empresa.",
+        "expertise": [
+          "Planejamento Estratégico",
+          "Desenvolvimento de Negócios",
+          "Liderança de Equipes"
+        ],
+        "education": "MBA pela Harvard Business School",
+        "contact": "peg@start.com"
+      },
+      {
+        "id": 2,
+        "name": "Richard Guerra",
+        "role": "CTO",
+        "image": "mask-group-1.png",
+        "bio": "Richard é um visionário tecnológico com paixão pela inovação. Ele lidera nossa equipe técnica e garante que estejamos na vanguarda dos avanços tecnológicos.",
+        "expertise": [
+          "Arquitetura de Software",
+          "IA e Aprendizado de Máquina",
+          "Infraestrutura em Nuvem"
+        ],
+        "education": "Ph.D. em Ciências da Computação pelo MIT",
+        "contact": "richard@start.com"
+      }
+    ]
+  }
+}

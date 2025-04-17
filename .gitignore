@@ -28,3 +28,8 @@ dist-ssr
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
 /.env
+
+# Environment variables
+.env
+.env.local
+.env.*.local

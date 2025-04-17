@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "Nossos Projetos",
+    "subtitle": "Descubra nossas soluções inovadoras e projetos bem-sucedidos",
+    "overline": "PROJETOS",
+    "buttonText": "Ver Nossos Serviços"
+  },
+  "showcase": {
+    "overline": "CASOS DE SUCESSO",
+    "title": "Projetos Recentes",
+    "viewDetails": "Ver Detalhes",
+    "noProjectsTitle": "Nenhum Projeto Encontrado",
+    "noProjectsMessage": "Não há projetos disponíveis no momento."
+  },
+  "loading": {
+    "projects": "Carregando projetos...",
+    "updating": "Atualizando projetos..."
+  },
+  "projects": [
+    {
+      "id": 1,
+      "title": "Plataforma de E-commerce",
+      "category": "Desenvolvimento Web",
+      "image": "project-1.png",
+      "description": "Uma plataforma moderna de e-commerce construída com React e Node.js."
+    },
+    {
+      "id": 2,
+      "title": "Painel Financeiro",
+      "category": "Design UI/UX",
+      "image": "project-2.png",
+      "description": "Um painel financeiro intuitivo para rastrear investimentos e despesas."
+    }
+  ]
+}

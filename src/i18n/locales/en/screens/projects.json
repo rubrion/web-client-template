@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "title": "Our Projects",
+    "subtitle": "Discover our innovative solutions and successful projects",
+    "overline": "PROJECTS",
+    "buttonText": "View Our Services"
+  },
+  "showcase": {
+    "overline": "SUCCESS STORIES",
+    "title": "Recent Projects",
+    "viewDetails": "View Details",
+    "noProjectsTitle": "No Projects Found",
+    "noProjectsMessage": "There are currently no projects available."
+  },
+  "projects": [
+    {
+      "id": 1,
+      "title": "E-commerce Platform",
+      "category": "Web Development",
+      "image": "project-1.png",
+      "description": "A modern e-commerce platform built with React and Node.js."
+    },
+    {
+      "id": 2,
+      "title": "Financial Dashboard",
+      "category": "UI/UX Design",
+      "image": "project-2.png",
+      "description": "An intuitive financial dashboard for tracking investments and expenses."
+    },
+    {
+      "id": 3,
+      "title": "Health & Fitness App",
+      "category": "Mobile App",
+      "image": "project-3.png",
+      "description": "A comprehensive health and fitness app for iOS and Android."
+    },
+    {
+      "id": 4,
+      "title": "Corporate Website",
+      "category": "Web Development",
+      "image": "project-4.png",
+      "description": "A responsive corporate website for a leading tech company."
+    },
+    {
+      "id": 5,
+      "title": "Real Estate Platform",
+      "category": "Web Development",
+      "image": "project-5.png",
+      "description": "A property listing and management platform with advanced search features."
+    },
+    {
+      "id": 6,
+      "title": "Social Media Dashboard",
+      "category": "UI/UX Design",
+      "image": "project-6.png",
+      "description": "A centralized dashboard for managing multiple social media accounts."
+    }
+  ],
+  "loading": {
+    "projects": "Loading projects...",
+    "updating": "Updating projects..."
+  }
+}

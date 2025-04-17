@@ -1,0 +1,7 @@
+{
+  "loading": "Cargando detalles del artículo",
+  "updating": "Actualizando contenido del artículo",
+  "notFound": "Artículo no encontrado",
+  "backButton": "Volver al Blog",
+  "publishedOn": "Publicado el {{date}} por {{author}}"
+}

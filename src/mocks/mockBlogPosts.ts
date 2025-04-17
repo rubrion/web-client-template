@@ -18,14 +18,19 @@ const mockPostContent = `
     </div>
 `;
 
-interface MockedBlogPost {
+export interface MockedBlogPost {
   id: string;
   title: string;
   summary: string;
   content: string;
+  date?: string;
+  author?: string;
+  categories?: string[];
+  image?: string;
+  category?: string;
 }
 
-export const generateBlogPost = (id: string) => {
+export const generateBlogPost = (id: string): MockedBlogPost => {
   return {
     id: id,
     title: `Post ${id}`,
@@ -35,7 +40,7 @@ export const generateBlogPost = (id: string) => {
 };
 
 export const mockBlogPosts: MockedBlogPost[] = Array.from(
-  { length: 30 },  // Increase to 30 posts for better pagination testing
+  { length: 30 },
   (_, i) => {
     const id = (i + 1).toString();
     return generateBlogPost(id);

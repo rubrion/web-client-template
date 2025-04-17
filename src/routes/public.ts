@@ -3,47 +3,43 @@ import { RouteObject } from './types';
 const PUBLIC_ROUTES: Record<string, RouteObject> = {
   HOME: {
     path: '/',
-    label: 'Home',
-    description: 'Welcome to the Rubrion homepage!',
+    label: 'navigation:menu.home',
+    description: 'common:meta.home',
   },
   ABOUT: {
     path: '/about',
-    label: 'About Us',
-    description: 'Learn more about Rubrion and our mission.',
+    label: 'navigation:menu.about',
+    description: 'common:meta.about',
   },
   CONTACT: {
     path: '/contact',
-    label: 'Contact',
-    description: 'Get in touch with Rubrion for inquiries or support.',
+    label: 'navigation:menu.contact',
+    description: 'common:meta.contact',
   },
-  PORTFOLIO: {
-    path: '/portfolio',
-    label: 'Portfolio',
-    description: 'Explore our latest projects and successful case studies.',
+  PROJECTS: {
+    path: '/projects',
+    label: 'navigation:menu.projects',
+    description: 'common:meta.projects',
   },
   SERVICES: {
     path: '/services',
-    label: 'Services',
-    description:
-      'Discover the solutions Rubrion offers to help your business grow.',
+    label: 'navigation:menu.services',
+    description: 'common:meta.services',
   },
   TEAMDETAILS: {
-    path: '/team-details',
-    label: 'Team Details',
-    description:
-      'Meet the experts behind Rubrion and learn about their expertise.',
+    path: '/team',
+    label: 'navigation:menu.team',
+    description: 'common:meta.team',
   },
   PARTNERDETAILS: {
-    path: '/partner-details',
-    label: 'Partner Details',
-    description:
-      'Meet the companies we collaborate with to bring you the best solutions.',
+    path: '/partners',
+    label: 'navigation:menu.partners',
+    description: 'common:meta.partners',
   },
   TEAMJOIN: {
-    path: '/join-our-team',
-    label: 'Join Our Team',
-    description:
-      'Apply to join our talented team and grow your career with us.',
+    path: '/join-team',
+    label: 'screens:teamJoin.title',
+    description: 'screens:teamJoin.description',
   },
 };
 

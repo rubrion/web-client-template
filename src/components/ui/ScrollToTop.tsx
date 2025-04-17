@@ -1,31 +1,92 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { Box, Fab, useScrollTrigger, Zoom } from '@mui/material';
+import React from 'react';
 
 interface ScrollToTopProps {
-    children: React.ReactNode;
+  threshold?: number;
+  position?: {
+    right?: number | string;
+    bottom?: number | string;
+    left?: number | string;
+  };
+  color?: 'primary' | 'secondary' | 'default';
+  size?: 'small' | 'medium' | 'large';
 }
 
-const ScrollToTop: React.FC<ScrollToTopProps> = ({ children }) => {
-    const location = useLocation();
+// Using class component to avoid hooks-related re-renders
+class ScrollToTop extends React.Component<ScrollToTopProps> {
+  static defaultProps = {
+    threshold: 100,
+    position: { right: 20, bottom: 20 },
+    color: 'primary',
+    size: 'medium',
+  };
 
-    useEffect(() => {
-        // Only scroll to top if there are no scroll-related params in the URL
-        const params = new URLSearchParams(location.search);
-        const hasScrollParams = params.has('scrollTo') || params.has('scrollToTop');
+  scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
-        if (!hasScrollParams) {
-            // Maintain scroll position on regular navigation
-            return;
-        }
+  render() {
+    const { threshold, position, color, size } = this.props;
 
-        // Only scroll to top when explicitly requested with scrollToTop=true
-        if (params.get('scrollToTop') === 'true') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    return (
+      <ScrollToTopContent
+        threshold={threshold!}
+        position={position!}
+        color={color!}
+        size={size!}
+        onClick={this.scrollToTop}
+      />
+    );
+  }
+}
 
-    }, [location.pathname, location.search]);
+// Separate functional component for the scroll trigger hook
+function ScrollToTopContent({
+  threshold,
+  position,
+  color,
+  size,
+  onClick,
+}: Required<ScrollToTopProps> & { onClick: () => void }) {
+  const trigger = useScrollTrigger({
+    threshold,
+    disableHysteresis: true,
+  });
 
-    return <>{children}</>;
-};
+  return (
+    <Zoom in={trigger}>
+      <Box
+        role="presentation"
+        sx={{
+          position: 'fixed',
+          bottom: position.bottom,
+          right: position.right,
+          left: position.left,
+          zIndex: 2,
+        }}
+        onClick={onClick}
+      >
+        <Fab
+          color={color}
+          size={size}
+          aria-label="Scroll back to top"
+          sx={{
+            boxShadow:
+              '0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <ArrowUpwardIcon />
+        </Fab>
+      </Box>
+    </Zoom>
+  );
+}
 
 export default ScrollToTop;

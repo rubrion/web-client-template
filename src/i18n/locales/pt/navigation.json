@@ -1,0 +1,17 @@
+{
+  "menu": {
+    "home": "Início",
+    "about": "Sobre",
+    "services": "Serviços",
+    "blog": "Blog",
+    "team": "Equipe",
+    "contact": "Contato",
+    "partners": "Parceiros"
+  },
+  "language": {
+    "english": "Inglês",
+    "spanish": "Espanhol",
+    "portuguese": "Português",
+    "select": "Selecionar idioma"
+  }
+}

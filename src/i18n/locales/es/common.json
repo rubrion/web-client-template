@@ -1,0 +1,76 @@
+{
+  "buttons": {
+    "readMore": "Leer Más",
+    "learnMore": "Aprender Más",
+    "getStarted": "Comenzar",
+    "submit": "Enviar",
+    "sendMessage": "Enviar Mensaje",
+    "viewAll": "Ver Todo"
+  },
+  "forms": {
+    "name": "Nombre",
+    "email": "Correo Electrónico",
+    "phone": "Número de Teléfono",
+    "message": "Mensaje",
+    "subject": "Asunto",
+    "customSubject": "Asunto Personalizado",
+    "required": "Requerido",
+    "invalidEmail": "Dirección de correo electrónico no válida"
+  },
+  "cta": {
+    "newsletter": "Suscríbase a Nuestro Boletín"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Por favor, inténtelo de nuevo más tarde.",
+    "fileSize": "El tamaño del archivo excede el límite de {{size}}MB"
+  },
+  "success": {
+    "messageSent": "¡Gracias por su mensaje! Nos pondremos en contacto con usted pronto."
+  },
+  "social": {
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram",
+    "github": "GitHub"
+  },
+  "partners": {
+    "google": "Google",
+    "microsoft": "Microsoft",
+    "airbnb": "Airbnb",
+    "facebook": "Facebook",
+    "spotify": "Spotify"
+  },
+  "footer": {
+    "tagline": "Potenciando tu viaje digital",
+    "navigation": "Navegación",
+    "contact": "Contáctenos",
+    "rights": "Todos los derechos reservados.",
+    "links": {
+      "privacy": "Política de Privacidad",
+      "terms": "Términos de Servicio",
+      "cookies": "Política de Cookies"
+    },
+    "contactInfo": {
+      "email": "info@raia.com",
+      "phone": "+1 234 567 8900",
+      "address": "123 Avenida Empresarial, Ciudad Tecnológica, CT 10111"
+    }
+  },
+  "newsletter": {
+    "title": "Suscríbase a Nuestro Boletín",
+    "description": "Manténgase actualizado con nuestras últimas noticias, artículos y ofertas exclusivas. Sin spam, cancele su suscripción en cualquier momento.",
+    "emailLabel": "Correo Electrónico",
+    "emailRequired": "El correo electrónico es requerido",
+    "invalidEmail": "Por favor ingrese un correo electrónico válido",
+    "subscribeButton": "Suscribirse Ahora",
+    "privacyNotice": "Al suscribirse, acepta nuestra Política de Privacidad y Términos de Servicio.",
+    "successTitle": "¡Gracias por Suscribirse!",
+    "successMessage": "Has sido añadido a nuestra lista de correo. ¡Te mantendremos informado de nuestras últimas actualizaciones!",
+    "closeButton": "Cerrar",
+    "close": "Cerrar"
+  },
+  "ui": {
+    "scrollToTop": "Volver arriba"
+  }
+}

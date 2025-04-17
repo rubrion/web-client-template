@@ -1,73 +1,149 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
+import { useLocalizedContent } from '../../hooks/useLocalizedContent';
+import ROUTES from '../../routes';
 import { spacing } from '../../theme/themeUtils';
+import { getStringContent } from '../../utils/translationUtils';
 
-// Define social media icons
-const defaultSocialIcons = [
-  { src: 'facebook-ico.svg', alt: 'Social Icon' },
-  { src: 'instagram-ico.svg', alt: 'Social Icon' },
-  { src: 'twitter-ico.svg', alt: 'Social Icon' },
-  { src: 'pinterest-ico.svg', alt: 'Social Icon' },
-  { src: 'tiktok-ico.svg', alt: 'Social Icon' },
-  { src: 'whatsapp-ico.svg', alt: 'Social Icon' },
-  { src: 'youtube-ico.svg', alt: 'Social Icon' },
-];
+const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
+  const { getContent: getCommonContent } = useLocalizedContent('common');
+  const { getContent: getNavContent } = useLocalizedContent('navigation');
 
-interface FooterProps {
-  socialIcons?: Array<{ src: string; alt: string }>;
-  copyrightText?: string;
-}
+  const translations = {
+    tagline: getCommonContent<string>('footer.tagline'),
+    navigation: getCommonContent<string>('footer.navigation'),
+    contact: getCommonContent<string>('footer.contact'),
+    rights: getCommonContent<string>('footer.rights'),
+    privacy: getCommonContent<string>('footer.links.privacy'),
+    terms: getCommonContent<string>('footer.links.terms'),
+    contactInfo: {
+      email: getCommonContent<string>('footer.contactInfo.email'),
+      phone: getCommonContent<string>('footer.contactInfo.phone'),
+      address: getCommonContent<string>('footer.contactInfo.address'),
+    },
+    menu: {
+      home: getNavContent<string>('menu.home'),
+      services: getNavContent<string>('menu.services'),
+      projects: getNavContent<string>('menu.projects'),
+      contact: getNavContent<string>('menu.contact'),
+    },
+  };
 
-const Footer: React.FC<FooterProps> = ({
-  socialIcons = defaultSocialIcons,
-  copyrightText = '© Start, 2025. All rights reserved.',
-}) => {
   return (
     <Box
+      component="footer"
       sx={{
-        bgcolor: 'primary.main',
-        py: 4,
-        pb: { xs: `calc(env(safe-area-inset-bottom) + 16px)`, sm: spacing.sm },
+        bgcolor: 'background.paper',
+        py: spacing.xl,
+        mt: 'auto',
+        borderTop: 1,
+        borderColor: 'divider',
       }}
     >
       <Container maxWidth="lg">
+        <Grid container spacing={spacing.lg} justifyContent="space-between">
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              RAIA
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {getStringContent(translations.tagline, 'footer.tagline')}
+            </Typography>
+          </Grid>
+
+          {/* Second column - Navigation */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {getStringContent(translations.navigation, 'footer.navigation')}
+            </Typography>
+            <Box>
+              <Link
+                component={RouterLink}
+                to={ROUTES.PUBLIC.HOME.path}
+                color="inherit"
+                display="block"
+                sx={{ mb: 1 }}
+              >
+                {getStringContent(
+                  translations.menu.home,
+                  'navigation.menu.home'
+                )}
+              </Link>
+              <Link
+                component={RouterLink}
+                to={ROUTES.PUBLIC.SERVICES.path}
+                color="inherit"
+                display="block"
+                sx={{ mb: 1 }}
+              >
+                {getStringContent(
+                  translations.menu.services,
+                  'navigation.menu.services'
+                )}
+              </Link>
+              <Link
+                component={RouterLink}
+                to={ROUTES.PUBLIC.PROJECTS.path}
+                color="inherit"
+                display="block"
+                sx={{ mb: 1 }}
+              >
+                {getStringContent(
+                  translations.menu.projects,
+                  'navigation.menu.projects'
+                )}
+              </Link>
+              <Link
+                component={RouterLink}
+                to={ROUTES.PUBLIC.CONTACT.path}
+                color="inherit"
+                display="block"
+              >
+                {getStringContent(
+                  translations.menu.contact,
+                  'navigation.menu.contact'
+                )}
+              </Link>
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              {getStringContent(translations.contact, 'footer.contact')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              Email: {translations.contactInfo.email || 'info@raia.com'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Phone: {translations.contactInfo.phone || '+1 234 567 8900'}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: spacing.lg }} />
+
         <Box
           sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: { xs: 3, sm: 0 },
+            flexWrap: 'wrap',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}
-          >
-            {socialIcons.map((icon, index) => (
-              <img
-                key={index}
-                height={18}
-                alt={icon.alt}
-                src={icon.src}
-                style={{ cursor: 'pointer' }}
-              />
-            ))}
-          </Box>
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'primary.contrastText',
-              textAlign: { xs: 'center', sm: 'right' },
-            }}
-          >
-            {copyrightText}
+          <Typography variant="body2" color="text.secondary">
+            © {currentYear} RAIA.{' '}
+            {getStringContent(translations.rights, 'footer.rights')}
           </Typography>
+          <Box>
+            <Link href="#" color="inherit" sx={{ mx: spacing.xs }}>
+              {getStringContent(translations.privacy, 'footer.links.privacy')}
+            </Link>
+            <Link href="#" color="inherit" sx={{ mx: spacing.xs }}>
+              {getStringContent(translations.terms, 'footer.links.terms')}
+            </Link>
+          </Box>
         </Box>
       </Container>
     </Box>

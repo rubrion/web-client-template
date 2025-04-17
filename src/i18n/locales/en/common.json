@@ -1,0 +1,87 @@
+{
+  "buttons": {
+    "readMore": "Read More",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "submit": "Submit",
+    "sendMessage": "Send Message",
+    "viewAll": "View All"
+  },
+  "forms": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "message": "Message",
+    "subject": "Subject",
+    "customSubject": "Custom Subject",
+    "required": "Required",
+    "invalidEmail": "Invalid email address"
+  },
+  "cta": {
+    "newsletter": "Subscribe to Our Newsletter"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again later.",
+    "fileSize": "File size exceeds {{size}}MB limit"
+  },
+  "success": {
+    "messageSent": "Thank you for your message! We will get back to you soon."
+  },
+  "social": {
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram",
+    "github": "GitHub"
+  },
+  "footer": {
+    "tagline": "Empowering your digital journey",
+    "navigation": "Navigation",
+    "contact": "Contact Us",
+    "rights": "All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    },
+    "contactInfo": {
+      "email": "info@raia.com",
+      "phone": "+1 234 567 8900",
+      "address": "123 Business Avenue, Tech City, TC 10111"
+    }
+  },
+  "meta": {
+    "home": "Welcome to Start - Empowering your digital journey",
+    "about": "Learn more about our company, mission, and values",
+    "blog": "Read the latest updates, insights, and trends from our industry experts",
+    "contact": "Get in touch with our team for inquiries or support",
+    "services": "Discover the solutions we offer to help your business grow",
+    "projects": "Explore our diverse range of projects and successful case studies",
+    "team": "Meet the experts behind our success and learn about their expertise",
+    "partners": "Discover the companies we collaborate with to deliver exceptional results",
+    "notFound": "The page you are looking for cannot be found"
+  },
+  "partners": {
+    "google": "Google",
+    "microsoft": "Microsoft",
+    "airbnb": "Airbnb",
+    "facebook": "Facebook",
+    "spotify": "Spotify"
+  },
+  "newsletter": {
+    "title": "Subscribe to Our Newsletter",
+    "description": "Stay updated with our latest news, articles, and exclusive offers. No spam, unsubscribe anytime.",
+    "emailLabel": "Email Address",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Please enter a valid email address",
+    "subscribeButton": "Subscribe Now",
+    "privacyNotice": "By subscribing, you agree to our Privacy Policy and Terms of Service.",
+    "successTitle": "Thank You for Subscribing!",
+    "successMessage": "You've been added to our mailing list. We'll keep you posted on our latest updates!",
+    "closeButton": "Close",
+    "close": "Close"
+  },
+  "ui": {
+    "scrollToTop": "Scroll back to top"
+  }
+}

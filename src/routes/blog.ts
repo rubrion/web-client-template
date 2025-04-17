@@ -1,22 +1,36 @@
-import { DynamicRoute, RouteObject } from './types';
+import {
+  DynamicRoute,
+  OptionalDetailParams,
+  PaginationParams,
+  RouteObject,
+} from './types';
 
 const BLOG_ROUTES = {
-  LIST: {
+  ROOT: {
     path: '/blog',
-    label: 'Blog',
-    description: 'Read the latest updates and insights from Rubrion.',
+    label: 'navigation:menu.blog',
+    description: 'common:meta.blog',
   } as RouteObject,
-  // Add pagination route
-  LIST_PAGED: ((params: { page: number }): string => {
+
+  LIST: {
+    path: '/blog/page/1',
+    label: 'navigation:menu.blog',
+    description: 'common:meta.blog',
+  } as RouteObject,
+
+  // Paginated list
+  LIST_PAGED: ((params: PaginationParams): string => {
     return `/blog/page/${params.page}`;
-  }) as DynamicRoute<{ page: number }>,
+  }) as DynamicRoute<PaginationParams>,
+
   LIST_PAGED_STATIC: '/blog/page/:page',
-  // Update post detail routes to use /blog/post/:id pattern
-  POST_DETAIL: ((params: { id: string }): string => {
-    if (!params.id)
-      throw new Error('ID is required to generate the blog post detail route');
+
+  // Detail page
+  POST_DETAIL: ((params: OptionalDetailParams = {}): string => {
+    if (!params.id) return '/blog/post/:id';
     return `/blog/post/${params.id}`;
-  }) as DynamicRoute<{ id: string }>,
+  }) as DynamicRoute<OptionalDetailParams>,
+
   POST_DETAIL_STATIC: '/blog/post/:id',
 };
 

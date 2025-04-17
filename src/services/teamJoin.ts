@@ -15,13 +15,11 @@ export const submitTeamJoinApplication = async (
   file: File | null
 ) => {
   try {
-    // Create form data for file upload
     const formPayload = new FormData();
     if (file) {
       formPayload.append('cv', file);
     }
 
-    // Append other form fields
     Object.entries(formData).forEach(([key, value]) => {
       formPayload.append(key, value);
     });

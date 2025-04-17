@@ -1,0 +1,19 @@
+{
+  "hero": {
+    "title": "Nuestro Blog",
+    "subtitle": "Manténgase actualizado con las últimas noticias, ideas y tendencias en nuestra industria.",
+    "overline": "BLOG",
+    "subscribeButton": "Suscríbase a Nuestro Boletín"
+  },
+  "articles": {
+    "overline": "ARTÍCULOS",
+    "title": "Últimos Artículos",
+    "readMore": "Leer Más",
+    "noPostsTitle": "No Hay Artículos Disponibles",
+    "noPostsMessage": "¡Vuelva pronto para ver nuevo contenido!"
+  },
+  "loading": {
+    "posts": "Cargando artículos del blog",
+    "updating": "Actualizando artículos"
+  }
+}

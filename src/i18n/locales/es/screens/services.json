@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "overline": "SERVICIOS",
+    "title": "Lo Que Ofrecemos"
+  },
+  "services": [
+    {
+      "title": "Desarrollo Web",
+      "icon": "web-dev-icon.svg",
+      "description": "Sitios web y aplicaciones web personalizados adaptados a las necesidades de su negocio.",
+      "features": [
+        "Diseño Responsivo",
+        "Soluciones de Comercio Electrónico",
+        "Sistemas de Gestión de Contenidos"
+      ]
+    }
+  ],
+  "process": {
+    "overline": "PROCESO",
+    "title": "Cómo Trabajamos",
+    "subtitle": "Nuestro proceso optimizado asegura una entrega eficiente y efectiva de su proyecto.",
+    "buttonText": "Comenzar",
+    "steps": [
+      {
+        "phase": "Descubrimiento",
+        "description": "Entendemos sus requisitos y objetivos."
+      }
+    ],
+    "footer": "Cuéntenos lo que necesita — entregaremos soluciones personalizadas para su negocio."
+  }
+}

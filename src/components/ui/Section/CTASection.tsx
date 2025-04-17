@@ -1,10 +1,11 @@
 import { Box, Button, ButtonProps } from '@mui/material';
-import React from 'react';
+import { motion } from 'framer-motion';
+import React, { ReactNode } from 'react';
 
 import Section, { SectionProps } from './Section';
 
 interface CTASectionProps extends SectionProps {
-  buttonText?: string;
+  buttonText?: string | ReactNode;
   buttonVariant?: 'contained' | 'outlined' | 'text';
   buttonColor?: ButtonProps['color'];
   onButtonClick?: () => void;
@@ -22,21 +23,47 @@ const CTASection: React.FC<CTASectionProps> = ({
 }) => {
   const buttonComponent = buttonText ? (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-      <Button
-        variant={buttonVariant}
-        color={buttonColor}
-        onClick={onButtonClick}
-        size="large"
+      <motion.div
+        whileHover={{
+          scale: 1.05,
+          transition: { duration: 0.3 },
+        }}
+        whileTap={{ scale: 0.95 }}
       >
-        {buttonText}
-      </Button>
+        <Button
+          variant={buttonVariant}
+          color={buttonColor}
+          onClick={onButtonClick}
+          size="large"
+          sx={{
+            fontWeight: 600,
+            px: 4,
+            py: 1.5,
+            borderRadius: 2,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-3px)',
+              boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        >
+          {buttonText}
+        </Button>
+      </motion.div>
     </Box>
   ) : null;
 
   return (
     <Section {...sectionProps}>
       {buttonPosition === 'top' && buttonComponent}
-      {children}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        {children}
+      </motion.div>
       {buttonPosition === 'bottom' && buttonComponent}
     </Section>
   );

@@ -4,11 +4,28 @@ body {
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
-  /* Prevent the bounce effect */
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   overflow: auto;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.disable-transitions * {
+  transition: none !important;
 }
 
 #root {
@@ -23,9 +40,11 @@ main {
 
 footer {
   flex-shrink: 0;
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
 }
 
-/* Animation classes for main content transitions */
 .app-content-preloading {
   opacity: 0;
   visibility: hidden;
@@ -37,7 +56,6 @@ footer {
   transition: opacity 0.3s ease-in;
 }
 
-/* Logo styles */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -53,7 +71,6 @@ footer {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-/* Animation keyframes */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -122,7 +139,6 @@ footer {
 }
 
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -133,7 +149,6 @@ footer {
   }
 }
 
-/* Fix for smooth loading animation transition */
 @keyframes progressAnim {
   0% {
     left: -30%;
@@ -144,7 +159,6 @@ footer {
   }
 }
 
-/* Animation handling - improved transitions */
 @keyframes fade-to-content {
   0% {
     opacity: 0;
@@ -159,7 +173,6 @@ footer {
   animation: fade-to-content 0.4s ease-in-out forwards;
 }
 
-/* Improved loading animation */
 @keyframes progress-line {
   0% {
     transform: translateX(-100%);
@@ -174,7 +187,6 @@ footer {
   animation: progress-line 1.5s infinite ease-in-out;
 }
 
-/* Animation utility classes */
 .fade-in {
   animation: fade-in 0.5s ease-in-out forwards;
 }
@@ -220,7 +232,77 @@ footer {
   color: #888;
 }
 
-/* Debug helper class */
 .debug-outline {
   border: 1px solid red;
+}
+
+.gradient-text {
+  background: linear-gradient(-45deg, #3b82f6, #6366f1, #2563eb, #4f46e5);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+img {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: currentColor;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 93.75%;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 87.5%;
+  }
+}
+
+.app-container img,
+.app-container svg {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
 }

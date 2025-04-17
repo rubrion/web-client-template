@@ -1,0 +1,15 @@
+{
+  "loading": "Loading project details",
+  "updating": "Updating project information",
+  "notFound": "Project not found",
+  "backButton": "Back to Projects",
+  "githubRepository": "GitHub Repository",
+  "visitWebsite": "Visit Website",
+  "technologies": "Technologies Used",
+  "references": "References",
+  "completedOn": "Completed on {{date}}",
+  "metaTitle": "Project: {{title}}",
+  "metaDescription": "View details for {{title}} - a project by our team",
+  "shareProject": "Share this project",
+  "relatedProjects": "Related Projects"
+}
