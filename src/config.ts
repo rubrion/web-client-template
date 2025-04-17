@@ -19,7 +19,7 @@ export const getEnvVariable = (key: string, defaultValue = ''): string => {
       const value = import.meta.env[key];
       if (value !== undefined) return value;
     }
-  } catch (e) {
+  } catch {
     // Silent catch - import.meta might not be available
   }
 
@@ -32,6 +32,17 @@ export const getEnvVariable = (key: string, defaultValue = ''): string => {
 
   return defaultValue;
 };
+
+/**
+ * Get stored data source preference from localStorage
+ */
+function getStoredPreference(key: string, defaultValue: boolean): boolean {
+  if (typeof window === 'undefined') return defaultValue;
+  const stored = localStorage.getItem(key);
+  if (stored === 'true') return true;
+  if (stored === 'false') return false;
+  return defaultValue;
+}
 
 /**
  * API base URL from environment
@@ -71,7 +82,10 @@ export const EXTERNAL_SERVICES = {
 export const IS_MOCK =
   typeof window !== 'undefined' &&
   import.meta.env.DEV &&
-  window.__IS_MSW_ACTIVE__ === true;
+  (window.__IS_MSW_ACTIVE__ === true || getStoredPreference('useMSW', false));
+
 export const USE_FIRESTORE =
-  getEnvVariable('VITE_USE_FIRESTORE') === 'true' && !IS_MOCK;
+  (getEnvVariable('VITE_USE_FIRESTORE') === 'true' ||
+    getStoredPreference('useFirestore', false)) &&
+  !IS_MOCK;
 export const API_PAGE_LIMIT = PAGINATION.DEFAULT_PAGE_SIZE;

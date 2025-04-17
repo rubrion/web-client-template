@@ -3,6 +3,7 @@ import './i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { Suspense, useEffect } from 'react';
 
+import DataSourceToggle from './components/debug/DataSourceToggle';
 import LanguageUpdater from './components/translation/LanguageUpdater';
 import LoadingIndicator from './components/ui/LoadingIndicator';
 import { ContentProvider } from './context/ContentContext';
@@ -104,6 +105,7 @@ const App: React.FC = () => {
                   <AppRoutes />
                 </Suspense>
               </div>
+              {import.meta.env.DEV && <DataSourceToggle />}
             </ContentProvider>
           </TranslationProvider>
         </LanguageProvider>

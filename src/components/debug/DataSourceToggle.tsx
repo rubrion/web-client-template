@@ -9,54 +9,58 @@ import React, { useEffect, useState } from 'react';
 import { IS_MOCK, USE_FIRESTORE } from '../../config';
 
 /**
- * Debug component to toggle between data sources at runtime
- * Only shown in development mode
+ * Component that allows toggling between different data sources during development
  */
-const DataSourceToggle = () => {
+const DataSourceToggle: React.FC = () => {
   const [dataSource, setDataSource] = useState<'mock' | 'firestore' | 'api'>(
     IS_MOCK ? 'mock' : USE_FIRESTORE ? 'firestore' : 'api'
   );
 
+  // Handler for changing data source
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
     newValue: 'mock' | 'firestore' | 'api'
   ) => {
-    if (newValue) {
-      setDataSource(newValue);
+    if (!newValue) return;
 
-      // Save preference to localStorage
-      localStorage.setItem('dataSource', newValue);
+    setDataSource(newValue);
 
-      // Set relevant flags
-      if (newValue === 'mock') {
-        localStorage.setItem('useMock', 'true');
-        localStorage.setItem('useFirestore', 'false');
-      } else if (newValue === 'firestore') {
-        localStorage.setItem('useMock', 'false');
-        localStorage.setItem('useFirestore', 'true');
-      } else {
-        localStorage.setItem('useMock', 'false');
-        localStorage.setItem('useFirestore', 'false');
-      }
+    // Store preference in localStorage
+    localStorage.setItem('dataSource', newValue);
 
-      // Reload the page to apply changes
-      window.location.reload();
+    // Update the flags
+    if (newValue === 'mock') {
+      localStorage.setItem('useMSW', 'true');
+      localStorage.setItem('useFirestore', 'false');
+    } else if (newValue === 'firestore') {
+      localStorage.setItem('useMSW', 'false');
+      localStorage.setItem('useFirestore', 'true');
+    } else {
+      // API
+      localStorage.setItem('useMSW', 'false');
+      localStorage.setItem('useFirestore', 'false');
     }
+
+    // Reload to apply changes
+    window.location.reload();
   };
 
-  // Load preference from localStorage on mount
+  // Initialize from localStorage on component mount
   useEffect(() => {
-    const savedDataSource = localStorage.getItem('dataSource');
+    const savedDataSource = localStorage.getItem('dataSource') as
+      | 'mock'
+      | 'firestore'
+      | 'api'
+      | null;
     if (
-      savedDataSource === 'mock' ||
-      savedDataSource === 'firestore' ||
-      savedDataSource === 'api'
+      savedDataSource &&
+      ['mock', 'firestore', 'api'].includes(savedDataSource)
     ) {
       setDataSource(savedDataSource);
     }
   }, []);
 
-  // Only render in development mode
+  // Only show in development
   if (import.meta.env.PROD) {
     return null;
   }
@@ -65,43 +69,46 @@ const DataSourceToggle = () => {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
-        right: 0,
-        margin: 2,
-        padding: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        borderRadius: 1,
+        bottom: '20px',
+        right: '20px',
         zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        borderRadius: 2,
+        padding: 1,
+        backdropFilter: 'blur(4px)',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
       }}
     >
-      <Typography variant="caption" sx={{ color: 'white', mb: 0.5 }}>
+      <Typography
+        variant="caption"
+        sx={{ display: 'block', textAlign: 'center', color: 'white', mb: 0.5 }}
+      >
         Data Source
       </Typography>
+
       <ToggleButtonGroup
-        size="small"
         value={dataSource}
         exclusive
         onChange={handleChange}
+        size="small"
         aria-label="data source"
       >
         <ToggleButton
           value="mock"
-          aria-label="mock data"
-          sx={{ color: 'white' }}
+          sx={{ color: 'white', '&.Mui-selected': { bgcolor: '#ff9800' } }}
         >
           Mock
         </ToggleButton>
         <ToggleButton
           value="firestore"
-          aria-label="firestore"
-          sx={{ color: 'white' }}
+          sx={{ color: 'white', '&.Mui-selected': { bgcolor: '#4caf50' } }}
         >
           Firestore
         </ToggleButton>
-        <ToggleButton value="api" aria-label="api" sx={{ color: 'white' }}>
+        <ToggleButton
+          value="api"
+          sx={{ color: 'white', '&.Mui-selected': { bgcolor: '#2196f3' } }}
+        >
           API
         </ToggleButton>
       </ToggleButtonGroup>
