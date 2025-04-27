@@ -18,6 +18,7 @@ export interface MockProject {
   references?: ProjectReference[];
 }
 
+
 const mockProjectContent = `
   <div>
     <h2>Project Overview</h2>
@@ -152,10 +153,46 @@ export const generateProject = (id: string): MockProject => {
   return project;
 };
 
-export const mockProjects: MockProject[] = Array.from(
+export const fodaseProjects: MockProject[] = Array.from(
   { length: 18 },
   (_, i) => {
     const id = (i + 1).toString();
     return generateProject(id);
   }
 );
+
+  //create statically by hand this array
+export const mockProjects: MockProject[] = [
+  {
+    id: '1',
+    title: 'Chat Diáro Oficial',
+    description: 'O Chat Diário Oficial é uma solução end-to-end desenvolvida para otimizar a busca de informações em longas bases de dados textuais, como o Diário Oficial do Município de Belo Horizonte (MG). Utilizando conceitos de Retrieval Augmented Generation (RAG), este projeto visa auxiliar servidores públicos e profissionais que precisam navegar diariamente por extensos documentos, proporcionando uma experiência de busca eficiente e economia de tempo.',
+    //content: mockProjectContent,
+    content: ' ',
+    image: generatePlaceholderImage('1'),
+    category: 'Geração 0',
+    date: '2nd Semester 2024',
+    technologies: ['RAG'],
+  },
+  {
+    id: '2',
+    title: 'BEMU',
+    description: '	Nosso objetivo é fornecer um benchmark mais preciso e culturalmente relevante para a avaliação de modelos multimodais em português. Esse esforço contribui para o avanço da pesquisa em IA no Brasil e estabelece um precedente para a inclusão de outras línguas não-inglesas na avaliação de modelos de IA.',
+    //content: mockProjectContent,
+    content: `O avanço dos modelos generativos multimodais tem sido notável, mas a diversidade linguística e cultural ainda é um desafio, especialmente para o português. A maioria dos benchmarks usados para avaliar esses modelos é predominantemente em inglês, comprometendo a captura das nuances e particularidades da língua portuguesa. Para enfrentar essa limitação, desenvolvemos o BEMU (Benchmarks Educacionais Multimodais Universitárias), focado na criação de um conjunto de dados multimodal baseado em questões de vestibulares brasileiros (Unesp, Unicamp, USP, ENEM, FAMERP e Santa Casa). Coletamos mais de 5 mil questões cobrindo diversas áreas do conhecimento, preservando o contexto cultural e linguístico original, sem depender de traduções. O dataset inclui textos autênticos (como trechos literários e jornalísticos) e imagens representativas da cultura brasileira (como charges e artes nacionais).`,
+    image: generatePlaceholderImage('2'),
+    category: 'Geração 0',
+    date: '2nd Semester 2024',
+    technologies: ['NLP'],
+  },
+  // {
+  //   id: '3',
+  //   title: 'Project 3',
+  //   description: 'Description for project 3',
+  //   content: mockProjectContent,
+  //   image: generatePlaceholderImage('3'),
+  //   category: 'Category 3',
+  //   date: '2023-03-01',
+  //   technologies: ['Angular', 'Spring Boot'],
+  // },
+];
