@@ -16,7 +16,15 @@ export interface MockProject {
   github?: string;
   website?: string;
   references?: ProjectReference[];
+  authors?: Author[];
 }
+
+export interface Author {
+  name: string;
+  role: string;
+  image: string;
+  linkedin: string;
+} 
 
 
 const mockProjectContent = `
@@ -173,6 +181,14 @@ export const mockProjects: MockProject[] = [
     category: 'Geração 0',
     date: '2nd Semester 2024',
     technologies: ['RAG'],
+    authors: [
+      {
+        name: 'Alvaro Jose Lopes',
+        role: 'Auxiliou na etapa de ingestao de dados',
+        image: 'https://example.com/lucas.jpg',
+        linkedin: 'https://www.linkedin.com/in/lucas-silva/',
+      },
+    ],
   },
   {
     id: '2',
