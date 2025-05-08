@@ -8,6 +8,8 @@ import {
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import ROUTES from '../../routes';
+
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -17,15 +19,31 @@ interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
   my?: number;
+  showHome?: boolean;
+  homeLabel?: string;
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   items,
   maxWidth = 'lg',
-  my = 1, // Reduced from 2 to 1
+  my = 1,
+  showHome = false,
+  homeLabel = 'Home',
 }) => {
+  // Create a new array with home item if showHome is true
+  const displayItems = React.useMemo(() => {
+    if (showHome && items && items.length > 0) {
+      const homeItem: BreadcrumbItem = {
+        label: homeLabel,
+        href: ROUTES.PUBLIC.HOME.path,
+      };
+      return [homeItem, ...items];
+    }
+    return items;
+  }, [items, showHome, homeLabel]);
+
   // Don't render if there are no items or only one item
-  if (!items || items.length <= 1) {
+  if (!displayItems || displayItems.length <= 1) {
     return null;
   }
 
@@ -41,8 +59,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           '& .MuiBreadcrumbs-ol': { flexWrap: 'wrap' },
         }}
       >
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1;
+        {displayItems.map((item, index) => {
+          const isLast = index === displayItems.length - 1;
 
           // Current page (last item) is not a link
           if (isLast) {

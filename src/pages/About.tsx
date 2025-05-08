@@ -1,17 +1,12 @@
 import { Box, Container, Grid, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import MissingTranslation from '../components/translation/MissingTranslation';
-import { CTASection, HeroSection } from '../components/ui';
+import { CTASection } from '../components/ui';
 import { useLocalizedContent } from '../hooks/useLocalizedContent';
 import BaseLayout from '../layouts/BaseLayout';
-import ROUTES from '../routes';
-import { createScrollRoute, scrollToElement } from '../utils/navigationUtils';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../utils/translationUtils';
+import { scrollToElement } from '../utils/navigationUtils';
 
 interface ValueItem {
   title: string;
@@ -19,7 +14,6 @@ interface ValueItem {
 }
 
 const About: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { getContent } = useLocalizedContent('screens', 'about');
 
@@ -31,13 +25,6 @@ const About: React.FC = () => {
       scrollToElement(scrollToId);
     }
   }, [location.search]);
-
-  const hero = {
-    title: getContent<string>('hero.title'),
-    subtitle: getContent<string>('hero.subtitle'),
-    overline: getContent<string>('hero.overline'),
-    buttonText: getContent<string>('hero.buttonText'),
-  };
 
   const story = {
     title: getContent<string>('story.title'),
@@ -51,32 +38,21 @@ const About: React.FC = () => {
     items: getContent<ValueItem[]>('values.items'),
   };
 
+  // Helper function to render content or MissingTranslation component when null
+  const renderContent = (content: string | null, key: string) => {
+    return (
+      content ?? <MissingTranslation translationKey={key} showTooltip={true} />
+    );
+  };
+
   return (
     <BaseLayout>
-      <HeroSection
-        title={getTranslatableContent(hero.title, 'about.hero.title')}
-        subtitle={getTranslatableContent(hero.subtitle, 'about.hero.subtitle')}
-        overline={getTranslatableContent(hero.overline, 'about.hero.overline')}
-        buttons={[
-          {
-            text: getStringContent(hero.buttonText, 'about.hero.buttonText'),
-            onClick: () =>
-              navigate(
-                createScrollRoute(
-                  ROUTES.PUBLIC.TEAMDETAILS.path,
-                  'team-details-section'
-                )
-              ),
-          },
-        ]}
-      />
-
       <Container id="our-story-section" maxWidth="lg" sx={{ my: 8 }}>
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box>
               <Typography variant="h4" component="h2" gutterBottom>
-                {getTranslatableContent(story.title, 'about.story.title')}
+                {renderContent(story.title, 'about.story.title')}
               </Typography>
               {Array.isArray(story.content) ? (
                 story.content.map((paragraph: string, index: number) => (
@@ -107,15 +83,9 @@ const About: React.FC = () => {
       </Container>
 
       <CTASection
-        overline={getTranslatableContent(
-          values.overline,
-          'about.values.overline'
-        )}
-        title={getTranslatableContent(values.title, 'about.values.title')}
-        subtitle={getTranslatableContent(
-          values.subtitle,
-          'about.values.subtitle'
-        )}
+        overline={renderContent(values.overline, 'about.values.overline')}
+        title={renderContent(values.title, 'about.values.title')}
+        subtitle={renderContent(values.subtitle, 'about.values.subtitle')}
       >
         <Grid container spacing={4} justifyContent="center">
           {Array.isArray(values.items) ? (

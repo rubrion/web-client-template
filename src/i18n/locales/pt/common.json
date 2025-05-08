@@ -72,5 +72,15 @@
   },
   "ui": {
     "scrollToTop": "Voltar ao topo"
+  },
+  "blog": {
+    "hero": {
+      "subscribeButton": "Assinar Newsletter"
+    }
+  },
+  "projects": {
+    "hero": {
+      "buttonText": "Ver Serviços"
+    }
   }
 }

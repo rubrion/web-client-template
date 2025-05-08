@@ -15,13 +15,9 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { useLocalizedContent } from '../hooks/useLocalizedContent';
+import useLocalizedContent from '../hooks/useLocalizedContent';
 import BaseLayout from '../layouts/BaseLayout';
 import { gridSizes } from '../theme/themeUtils';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../utils/translationUtils';
 
 interface ContactInfo {
   title: string;
@@ -59,56 +55,21 @@ interface SubjectOptions {
 const Contact: React.FC = () => {
   const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { getContent } = useLocalizedContent('screens', 'contact');
+  const { getRequiredContent } = useLocalizedContent('screens', 'contact');
 
-  // Fix: Provide default values for all properties to avoid null checks
   const contactData = {
-    pageTitle: getContent<string>('pageTitle') || '',
-    pageDescription: getContent<string>('pageDescription') || '',
-    contactInfo: getContent<ContactInfo>('contactInfo') || {
-      title: '',
-      email: '',
-      phone: '',
-      address: '',
-    },
-    businessHours: getContent<BusinessHours>('businessHours') || {
-      title: '',
-      weekdays: '',
-      weekends: '',
-    },
-    form: getContent<FormTranslations>('form') || {
-      title: '',
-      name: '',
-      email: '',
-      subject: '',
-      customSubject: '',
-      message: '',
-      attachFile: '',
-      fileSize: '',
-      fileSizeError: '',
-      submit: '',
-      success: '',
-    },
-    subjects: getContent<SubjectOptions>('subjects') || {
-      partner: '',
-      services: '',
-      other: '',
-    },
+    pageTitle: getRequiredContent<string>('pageTitle'),
+    pageDescription: getRequiredContent<string>('pageDescription'),
+    contactInfo: getRequiredContent<ContactInfo>('contactInfo'),
+    businessHours: getRequiredContent<BusinessHours>('businessHours'),
+    form: getRequiredContent<FormTranslations>('form'),
+    subjects: getRequiredContent<SubjectOptions>('subjects'),
   };
 
   const SUBJECT_OPTIONS = {
-    PARTNER: getStringContent(
-      contactData.subjects.partner,
-      'contact.subjects.partner'
-    ),
-    SERVICES: getStringContent(
-      contactData.subjects.services,
-      'contact.subjects.services'
-    ),
-    OTHER: getStringContent(
-      contactData.subjects.other,
-      'contact.subjects.other'
-    ),
+    PARTNER: contactData.subjects.partner,
+    SERVICES: contactData.subjects.services,
+    OTHER: contactData.subjects.other,
   };
 
   const [formData, setFormData] = useState({
@@ -159,11 +120,7 @@ const Contact: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const errorMessage = getStringContent(
-        contactData.form.fileSizeError,
-        'contact.form.fileSizeError'
-      );
-
+      const errorMessage = contactData.form.fileSizeError;
       if (file.size > 5 * 1024 * 1024) {
         setFileError(errorMessage);
         setSelectedFile(null);
@@ -199,7 +156,7 @@ const Contact: React.FC = () => {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
 
-    alert(getStringContent(contactData.form.success, 'contact.form.success'));
+    alert(contactData.form.success);
   };
 
   return (
@@ -208,63 +165,36 @@ const Contact: React.FC = () => {
         <Grid container spacing={6}>
           <Grid size={gridSizes.halfWidth}>
             <Typography variant="h3" gutterBottom>
-              {getTranslatableContent(
-                contactData.pageTitle,
-                'contact.pageTitle'
-              )}
+              {contactData.pageTitle}
             </Typography>
             <Typography variant="body1" component="p" sx={{ mb: 2 }}>
-              {getTranslatableContent(
-                contactData.pageDescription,
-                'contact.pageDescription'
-              )}
+              {contactData.pageDescription}
             </Typography>
 
             <Box sx={{ mt: 4 }}>
               <Typography variant="h6" gutterBottom>
-                {getTranslatableContent(
-                  contactData.contactInfo.title,
-                  'contact.contactInfo.title'
-                )}
+                {contactData.contactInfo.title}
               </Typography>
               <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                {getTranslatableContent(
-                  contactData.contactInfo.email,
-                  'contact.contactInfo.email'
-                )}
+                {contactData.contactInfo.email}
               </Typography>
               <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                {getTranslatableContent(
-                  contactData.contactInfo.phone,
-                  'contact.contactInfo.phone'
-                )}
+                {contactData.contactInfo.phone}
               </Typography>
               <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                {getTranslatableContent(
-                  contactData.contactInfo.address,
-                  'contact.contactInfo.address'
-                )}
+                {contactData.contactInfo.address}
               </Typography>
             </Box>
 
             <Box sx={{ mt: 4 }}>
               <Typography variant="h6" gutterBottom>
-                {getTranslatableContent(
-                  contactData.businessHours.title,
-                  'contact.businessHours.title'
-                )}
+                {contactData.businessHours.title}
               </Typography>
               <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                {getTranslatableContent(
-                  contactData.businessHours.weekdays,
-                  'contact.businessHours.weekdays'
-                )}
+                {contactData.businessHours.weekdays}
               </Typography>
               <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                {getTranslatableContent(
-                  contactData.businessHours.weekends,
-                  'contact.businessHours.weekends'
-                )}
+                {contactData.businessHours.weekends}
               </Typography>
             </Box>
           </Grid>
@@ -272,20 +202,14 @@ const Contact: React.FC = () => {
           <Grid size={gridSizes.halfWidth}>
             <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
               <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                {getTranslatableContent(
-                  contactData.form.title,
-                  'contact.form.title'
-                )}
+                {contactData.form.title}
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                   <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
-                      label={getStringContent(
-                        contactData.form.name,
-                        'contact.form.name'
-                      )}
+                      label={contactData.form.name}
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -295,10 +219,7 @@ const Contact: React.FC = () => {
                   <Grid size={gridSizes.halfWidth}>
                     <TextField
                       fullWidth
-                      label={getStringContent(
-                        contactData.form.email,
-                        'contact.form.email'
-                      )}
+                      label={contactData.form.email}
                       name="email"
                       type="email"
                       value={formData.email}
@@ -309,20 +230,14 @@ const Contact: React.FC = () => {
                   <Grid size={gridSizes.fullWidth}>
                     <FormControl fullWidth required>
                       <InputLabel id="subject-label">
-                        {getStringContent(
-                          contactData.form.subject,
-                          'contact.form.subject'
-                        )}
+                        {contactData.form.subject}
                       </InputLabel>
                       <Select
                         labelId="subject-label"
                         id="subject"
                         name="subject"
                         value={formData.subject}
-                        label={getStringContent(
-                          contactData.form.subject,
-                          'contact.form.subject'
-                        )}
+                        label={contactData.form.subject}
                         onChange={handleSubjectChange}
                       >
                         <MenuItem value={SUBJECT_OPTIONS.PARTNER}>
@@ -342,10 +257,7 @@ const Contact: React.FC = () => {
                     <Grid size={gridSizes.fullWidth}>
                       <TextField
                         fullWidth
-                        label={getStringContent(
-                          contactData.form.customSubject,
-                          'contact.form.customSubject'
-                        )}
+                        label={contactData.form.customSubject}
                         name="customSubject"
                         value={formData.customSubject}
                         onChange={handleChange}
@@ -357,10 +269,7 @@ const Contact: React.FC = () => {
                   <Grid size={gridSizes.fullWidth}>
                     <TextField
                       fullWidth
-                      label={getStringContent(
-                        contactData.form.message,
-                        'contact.form.message'
-                      )}
+                      label={contactData.form.message}
                       name="message"
                       multiline
                       rows={4}
@@ -375,10 +284,7 @@ const Contact: React.FC = () => {
                       <Button variant="outlined" component="label" fullWidth>
                         {selectedFile
                           ? selectedFile.name
-                          : getStringContent(
-                              contactData.form.attachFile,
-                              'contact.form.attachFile'
-                            )}
+                          : contactData.form.attachFile}
                         <input
                           ref={fileInputRef}
                           type="file"
@@ -400,10 +306,7 @@ const Contact: React.FC = () => {
                           variant="caption"
                           sx={{ display: 'block', mt: 1 }}
                         >
-                          {getStringContent(
-                            contactData.form.fileSize,
-                            'contact.form.fileSize'
-                          ).replace(
+                          {contactData.form.fileSize.replace(
                             '{{size}}',
                             (selectedFile.size / (1024 * 1024)).toFixed(2)
                           )}
@@ -420,10 +323,7 @@ const Contact: React.FC = () => {
                       size="large"
                       fullWidth
                     >
-                      {getStringContent(
-                        contactData.form.submit,
-                        'contact.form.submit'
-                      )}
+                      {contactData.form.submit}
                     </Button>
                   </Grid>
                 </Grid>

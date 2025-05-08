@@ -59,18 +59,28 @@
   },
   "newsletter": {
     "title": "Suscríbase a Nuestro Boletín",
-    "description": "Manténgase actualizado con nuestras últimas noticias, artículos y ofertas exclusivas. Sin spam, cancele su suscripción en cualquier momento.",
-    "emailLabel": "Correo Electrónico",
+    "description": "Manténgase al día con las últimas noticias y actualizaciones directamente en su bandeja de entrada.",
+    "emailLabel": "Su dirección de correo electrónico",
     "emailRequired": "El correo electrónico es requerido",
-    "invalidEmail": "Por favor ingrese un correo electrónico válido",
-    "subscribeButton": "Suscribirse Ahora",
-    "privacyNotice": "Al suscribirse, acepta nuestra Política de Privacidad y Términos de Servicio.",
-    "successTitle": "¡Gracias por Suscribirse!",
-    "successMessage": "Has sido añadido a nuestra lista de correo. ¡Te mantendremos informado de nuestras últimas actualizaciones!",
+    "invalidEmail": "Por favor introduzca un correo electrónico válido",
+    "subscribeButton": "Suscribirse",
+    "privacyNotice": "Al suscribirse, acepta nuestra política de privacidad. No compartimos su información.",
+    "successTitle": "¡Gracias por suscribirse!",
+    "successMessage": "Se ha suscrito correctamente a nuestro boletín.",
     "closeButton": "Cerrar",
     "close": "Cerrar"
   },
   "ui": {
     "scrollToTop": "Volver arriba"
+  },
+  "blog": {
+    "hero": {
+      "subscribeButton": "Suscríbase a Nuestro Boletín"
+    }
+  },
+  "projects": {
+    "hero": {
+      "buttonText": "Ver Servicios"
+    }
   }
 }

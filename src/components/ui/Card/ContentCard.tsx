@@ -17,7 +17,6 @@ export interface ContentItem {
   id: string | number;
   title: string;
   description?: string;
-  summary?: string;
   image?: string;
   category?: string;
   tags?: string[];
@@ -30,7 +29,6 @@ export interface ContentItem {
 interface ContentCardProps {
   item: ContentItem;
   elevation?: number;
-  imageHeight?: string;
   imageAspectRatio?: string;
   showCategory?: boolean;
   variant?: 'default' | 'compact' | 'featured';
@@ -39,13 +37,12 @@ interface ContentCardProps {
 const ContentCard: React.FC<ContentCardProps> = ({
   item,
   elevation = 1,
-  imageHeight = '0',
   imageAspectRatio = '56.25%', // 16:9 ratio
   showCategory = true,
   variant = 'default',
 }) => {
   const [imageError, setImageError] = useState(false);
-  const contentText = item.description || item.summary || '';
+  const contentText = item.description;
 
   // Determine content type based on the link or category
   const getContentType = (): 'blog' | 'project' | 'generic' => {
@@ -212,7 +209,6 @@ const ContentCard: React.FC<ContentCardProps> = ({
           size="small"
           sx={{
             fontWeight: 500,
-            textTransform: variant === 'featured' ? 'none' : 'uppercase',
             fontSize: variant === 'featured' ? '0.9rem' : '0.75rem',
           }}
         >

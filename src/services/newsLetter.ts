@@ -1,7 +1,17 @@
 import axiosInstance from './axiosInstance';
+import { NewsletterEmailSchema } from './validators';
 
 export const subscribeToNewsletter = async (email: string) => {
   try {
+    // Validate the email before sending the request
+    const validationResult = NewsletterEmailSchema.safeParse({ email });
+
+    if (!validationResult.success) {
+      throw new Error(
+        validationResult.error.errors[0].message || 'Invalid email address'
+      );
+    }
+
     const response = await axiosInstance.post('/newsletter/subscribe', {
       email,
     });

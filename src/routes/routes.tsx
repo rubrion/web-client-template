@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import PageHelmet from '../components/translation/PageHelmet';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
+import DataSourceTest from '../pages/DataSourceTest';
 
 const componentCache = new Map();
 
@@ -225,6 +226,8 @@ const AppRoutes: React.FC = () => {
             </PageHelmet>
           }
         />
+
+        <Route path="/test-data-source" element={<DataSourceTest />} />
 
         {/* Catch-all for unknown routes */}
         <Route

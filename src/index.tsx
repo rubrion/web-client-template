@@ -5,26 +5,26 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
+import { initMsw } from './mocks/browser';
 
 async function prepareApp() {
+  // Initialize MSW if in development and MSW is not disabled in localStorage
   if (process.env.NODE_ENV === 'development') {
-    try {
-      const { worker } = await import('./mocks/browser');
+    // Check localStorage for preference
+    const useMSW = localStorage.getItem('useMSW');
 
+    if (useMSW !== 'false') {
       try {
-        await worker.start({
-          onUnhandledRequest: 'bypass',
-          serviceWorker: {
-            url: '/mockServiceWorker.js',
-            options: { scope: '/' },
-          },
-        });
-        console.log('🔶 Mock Service Worker initialized successfully');
-      } catch (mswError) {
-        console.error('Failed to start MSW:', mswError);
+        const mswStarted = await initMsw();
+        console.log(
+          `🔶 MSW initialization ${mswStarted ? 'successful' : 'skipped'}`
+        );
+      } catch (error) {
+        console.error('Failed to initialize Mock Service Worker', error);
       }
-    } catch (error) {
-      console.error('Failed to initialize Mock Service Worker', error);
+    } else {
+      console.log('MSW is disabled based on localStorage preference');
+      window.__IS_MSW_ACTIVE__ = false;
     }
   }
 

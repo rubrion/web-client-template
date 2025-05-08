@@ -1,16 +1,29 @@
+import { COLLECTIONS } from '../config';
+import { resolveTenant } from '../core/tenant';
 import { mockBlogPosts, MockedBlogPost } from '../mocks/mockBlogPosts';
 import { createPaginatedService } from './createPaginatedService';
 import { BlogPostSchema } from './validators';
 
 /**
- * Service for fetching blog posts
+ * Service for fetching blog posts - initialized lazily to avoid require issues
  */
-export const blogService = createPaginatedService<MockedBlogPost>({
-  route: '/posts',
-  mock: mockBlogPosts,
-  collection: 'blogs',
-  schema: BlogPostSchema,
-});
+let _blogService: ReturnType<typeof createPaginatedService<MockedBlogPost>>;
+
+/**
+ * Get the blog service instance, initializing if necessary
+ */
+export const getBlogService = async () => {
+  if (!_blogService) {
+    // Initialize the service directly with createPaginatedService to avoid async issues
+    _blogService = createPaginatedService<MockedBlogPost>({
+      route: '/posts',
+      mock: mockBlogPosts,
+      collection: COLLECTIONS.BLOGS,
+      schema: BlogPostSchema,
+    });
+  }
+  return _blogService;
+};
 
 // Re-export the BlogPost interface
 export type { MockedBlogPost } from '../mocks/mockBlogPosts';
@@ -30,9 +43,17 @@ export interface PaginatedBlogResponse {
  */
 export const fetchBlogPosts = async (
   page = 1,
-  limit = 9
+  limit = 9,
+  tenant?: string,
+  language?: string
 ): Promise<PaginatedBlogResponse> => {
-  const response = await blogService.list(page, limit);
+  // Use provided tenant or default from environment
+  const currentTenant = tenant || resolveTenant();
+
+  // Get service and use it
+  const blogService = await getBlogService();
+  const response = await blogService.list(currentTenant, page, limit, language);
+
   return {
     posts: response.items,
     totalPages: response.totalPages,
@@ -46,7 +67,16 @@ export const fetchBlogPosts = async (
  * @deprecated Use blogService.byId() instead
  */
 export const fetchBlogPostById = async (
-  id: string
+  id: string,
+  tenant?: string,
+  language?: string
 ): Promise<MockedBlogPost> => {
-  return blogService.byId(id);
+  // Use provided tenant or default from environment
+  const currentTenant = tenant || resolveTenant();
+
+  // Get service and use it
+  const blogService = await getBlogService();
+
+  // Use passed language parameter
+  return blogService.byId(currentTenant, id, language);
 };

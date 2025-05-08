@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useLocalizedContent } from '../../hooks/useLocalizedContent';
 import ROUTES from '../../routes';
 import { spacing } from '../../theme/themeUtils';
-import { getStringContent } from '../../utils/translationUtils';
+import MissingTranslation from '../translation/MissingTranslation';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -32,6 +32,16 @@ const Footer: React.FC = () => {
     },
   };
 
+  // Helper function to render content or MissingTranslation component when null
+  const renderContent = (
+    content: string | null,
+    key: string
+  ): React.ReactNode => {
+    return (
+      content ?? <MissingTranslation translationKey={key} showTooltip={true} />
+    );
+  };
+
   return (
     <Box
       component="footer"
@@ -47,17 +57,17 @@ const Footer: React.FC = () => {
         <Grid container spacing={spacing.lg} justifyContent="space-between">
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" color="text.primary" gutterBottom>
-              RAIA
+              START
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {getStringContent(translations.tagline, 'footer.tagline')}
+              {renderContent(translations.tagline, 'footer.tagline')}
             </Typography>
           </Grid>
 
           {/* Second column - Navigation */}
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" color="text.primary" gutterBottom>
-              {getStringContent(translations.navigation, 'footer.navigation')}
+              {renderContent(translations.navigation, 'footer.navigation')}
             </Typography>
             <Box>
               <Link
@@ -67,10 +77,7 @@ const Footer: React.FC = () => {
                 display="block"
                 sx={{ mb: 1 }}
               >
-                {getStringContent(
-                  translations.menu.home,
-                  'navigation.menu.home'
-                )}
+                {renderContent(translations.menu.home, 'navigation.menu.home')}
               </Link>
               <Link
                 component={RouterLink}
@@ -79,7 +86,7 @@ const Footer: React.FC = () => {
                 display="block"
                 sx={{ mb: 1 }}
               >
-                {getStringContent(
+                {renderContent(
                   translations.menu.services,
                   'navigation.menu.services'
                 )}
@@ -91,7 +98,7 @@ const Footer: React.FC = () => {
                 display="block"
                 sx={{ mb: 1 }}
               >
-                {getStringContent(
+                {renderContent(
                   translations.menu.projects,
                   'navigation.menu.projects'
                 )}
@@ -102,7 +109,7 @@ const Footer: React.FC = () => {
                 color="inherit"
                 display="block"
               >
-                {getStringContent(
+                {renderContent(
                   translations.menu.contact,
                   'navigation.menu.contact'
                 )}
@@ -112,13 +119,13 @@ const Footer: React.FC = () => {
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" color="text.primary" gutterBottom>
-              {getStringContent(translations.contact, 'footer.contact')}
+              {renderContent(translations.contact, 'footer.contact')}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              Email: {translations.contactInfo.email || 'info@raia.com'}
+              Email: {translations.contactInfo.email}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Phone: {translations.contactInfo.phone || '+1 234 567 8900'}
+              Phone: {translations.contactInfo.phone}
             </Typography>
           </Grid>
         </Grid>
@@ -133,15 +140,15 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            © {currentYear} RAIA.{' '}
-            {getStringContent(translations.rights, 'footer.rights')}
+            © {currentYear} START.{' '}
+            {renderContent(translations.rights, 'footer.rights')}
           </Typography>
           <Box>
             <Link href="#" color="inherit" sx={{ mx: spacing.xs }}>
-              {getStringContent(translations.privacy, 'footer.links.privacy')}
+              {renderContent(translations.privacy, 'footer.links.privacy')}
             </Link>
             <Link href="#" color="inherit" sx={{ mx: spacing.xs }}>
-              {getStringContent(translations.terms, 'footer.links.terms')}
+              {renderContent(translations.terms, 'footer.links.terms')}
             </Link>
           </Box>
         </Box>

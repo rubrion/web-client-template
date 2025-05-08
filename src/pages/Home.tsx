@@ -1,8 +1,9 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import MissingTranslation from '../components/translation/MissingTranslation';
 import { HeroSection } from '../components/ui';
 import TeamCard from '../components/ui/Card/TeamCard';
 import { TeamMemberType } from '../components/ui/Card/TeamCard';
@@ -15,115 +16,22 @@ import BaseLayout from '../layouts/BaseLayout';
 import ROUTES from '../routes';
 import { gridSizes } from '../theme/themeUtils';
 import { createScrollRoute } from '../utils/navigationUtils';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../utils/translationUtils';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { getContent, getRequiredContent, translationState } =
     useTranslationContext();
-  const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log('Home - Language changed, forcing refresh');
-      setRefreshKey((prev) => prev + 1);
-    };
-
-    document.addEventListener('i18n-language-changed', handleLanguageChange);
-    i18n.on('languageChanged', handleLanguageChange);
-
-    return () => {
-      document.removeEventListener(
-        'i18n-language-changed',
-        handleLanguageChange
-      );
-      i18n.off('languageChanged', handleLanguageChange);
-    };
-  }, [i18n]);
-
-  const [pageData, setPageData] = useState<{
-    teamMembers: TeamMemberType[] | null;
-    partners: Record<string, string> | null;
-  }>({
-    teamMembers: null,
-    partners: null,
-  });
-
-  useEffect(() => {
-    try {
-      const teamMembers = getRequiredContent<TeamMemberType[]>(
-        'screens',
-        'home.teamMembers'
-      );
-
-      const partners = getRequiredContent<Record<string, string>>(
-        'common',
-        'partners'
-      );
-
-      setPageData({
-        teamMembers,
-        partners,
-      });
-    } catch (error) {
-      console.error('Error loading required data:', error);
-    }
-  }, [i18n.language, refreshKey, getRequiredContent]);
-
-  const partnerLogos = pageData.partners
-    ? [
-        {
-          src: 'google-logo.svg',
-          alt: pageData.partners.google || 'Google',
-          width: '152.64px',
-          height: '50px',
-        },
-        {
-          src: 'microsoft-logo.svg',
-          alt: pageData.partners.microsoft || 'Microsoft',
-          width: '210.85px',
-          height: '45px',
-        },
-        {
-          src: 'airbnb-logo.svg',
-          alt: pageData.partners.airbnb || 'Airbnb',
-          width: '160.29px',
-          height: '50px',
-        },
-        {
-          src: 'facebook-logo.svg',
-          alt: pageData.partners.facebook || 'Facebook',
-          width: '196.38px',
-          height: '38px',
-        },
-        {
-          src: 'spotify-logo.svg',
-          alt: pageData.partners.spotify || 'Spotify',
-          width: '166.82px',
-          height: '50px',
-        },
-      ]
-    : [];
-
-  const teamCards = pageData.teamMembers
-    ? pageData.teamMembers.map((member) => {
-        const validMember: TeamMemberType = {
-          ...member,
-          image: member.image || undefined,
-        };
-        return (
-          <TeamCard
-            key={validMember.id}
-            member={validMember}
-            variant="simple"
-          />
-        );
-      })
-    : [];
+  /* Essential data */
+  const teamMembers = getRequiredContent<TeamMemberType[]>(
+    'screens',
+    'home.teamMembers'
+  );
+  const partners = getRequiredContent<Record<string, string>>(
+    'common',
+    'partners'
+  );
 
   const hero = {
     title: getContent<string>('screens', 'home.hero.title'),
@@ -153,8 +61,73 @@ const Home: React.FC = () => {
   };
 
   const ctaContent = {
-    becomePartner: getContent<string>('screens', 'home.cta.becomePartner'),
-    joinTeam: getContent<string>('screens', 'home.cta.joinTeam'),
+    becomePartner: getRequiredContent<string>(
+      'screens',
+      'home.cta.becomePartner'
+    ),
+    joinTeam: getRequiredContent<string>('screens', 'home.cta.joinTeam'),
+  };
+  /* Logo configuration derived from partners */
+  const partnerLogos = useMemo(
+    () => [
+      {
+        src: 'google-logo.svg',
+        alt: partners.google,
+        width: '152.64px',
+        height: '50px',
+      },
+      {
+        src: 'microsoft-logo.svg',
+        alt: partners.microsoft,
+        width: '210.85px',
+        height: '45px',
+      },
+      {
+        src: 'airbnb-logo.svg',
+        alt: partners.airbnb,
+        width: '160.29px',
+        height: '50px',
+      },
+      {
+        src: 'facebook-logo.svg',
+        alt: partners.facebook,
+        width: '196.38px',
+        height: '38px',
+      },
+      {
+        src: 'spotify-logo.svg',
+        alt: partners.spotify,
+        width: '166.82px',
+        height: '50px',
+      },
+    ],
+    [partners]
+  );
+
+  /* Team cards derived from team members */
+  const teamCards = useMemo(
+    () =>
+      teamMembers.map((member) => {
+        const validMember: TeamMemberType = {
+          ...member,
+          image: member.image || undefined,
+        };
+        return (
+          <TeamCard
+            key={validMember.id}
+            member={validMember}
+            variant="simple"
+          />
+        );
+      }),
+    [teamMembers]
+  );
+
+  // Helper function to render content or MissingTranslation component when null
+  const renderContent = (content: string | null, key: string) => {
+    return (
+      content ?? <MissingTranslation translationKey={key} showTooltip={true} />
+    );
   };
 
   if (translationState.isLoading) {
@@ -204,22 +177,19 @@ const Home: React.FC = () => {
 
   return (
     <BaseLayout showNavbar={false}>
-      <Box key={`home-content-${refreshKey}-${i18n.language}`}>
+      <Box>
         <HeroSection
-          title={getTranslatableContent(hero.title, 'home.hero.title')}
-          subtitle={getTranslatableContent(hero.subtitle, 'home.hero.subtitle')}
-          overline={getTranslatableContent(hero.overline, 'home.hero.overline')}
+          title={renderContent(hero.title, 'home.hero.title')}
+          subtitle={renderContent(hero.subtitle, 'home.hero.subtitle')}
+          overline={renderContent(hero.overline, 'home.hero.overline')}
           imageSrc="/group.png"
           buttons={[
             {
-              text: getStringContent(
-                ctaContent.becomePartner,
-                'home.cta.becomePartner'
-              ),
+              text: ctaContent.becomePartner,
               onClick: () => navigate(ROUTES.PUBLIC.CONTACT.path),
             },
             {
-              text: getStringContent(ctaContent.joinTeam, 'home.cta.joinTeam'),
+              text: ctaContent.joinTeam,
               onClick: () => navigate(ROUTES.PUBLIC.TEAMJOIN.path),
             },
           ]}
@@ -228,19 +198,10 @@ const Home: React.FC = () => {
 
         <CTASection
           id="about-section"
-          overline={getTranslatableContent(
-            aboutContent.overline,
-            'home.about.overline'
-          )}
-          title={getTranslatableContent(aboutContent.title, 'home.about.title')}
-          subtitle={getTranslatableContent(
-            aboutContent.subtitle,
-            'home.about.subtitle'
-          )}
-          buttonText={getStringContent(
-            aboutContent.buttonText,
-            'home.about.buttonText'
-          )}
+          overline={renderContent(aboutContent.overline, 'home.about.overline')}
+          title={renderContent(aboutContent.title, 'home.about.title')}
+          subtitle={renderContent(aboutContent.subtitle, 'home.about.subtitle')}
+          buttonText={aboutContent.buttonText}
           onButtonClick={() =>
             navigate(
               createScrollRoute(ROUTES.PUBLIC.ABOUT.path, 'our-story-section')
@@ -251,22 +212,16 @@ const Home: React.FC = () => {
 
         <CTASection
           id="partners-section"
-          overline={getTranslatableContent(
+          overline={renderContent(
             partnersContent.overline,
             'home.partners.overline'
           )}
-          title={getTranslatableContent(
-            partnersContent.title,
-            'home.partners.title'
-          )}
-          subtitle={getTranslatableContent(
+          title={renderContent(partnersContent.title, 'home.partners.title')}
+          subtitle={renderContent(
             partnersContent.subtitle,
             'home.partners.subtitle'
           )}
-          buttonText={getStringContent(
-            partnersContent.buttonText,
-            'home.partners.buttonText'
-          )}
+          buttonText={partnersContent.buttonText}
           onButtonClick={() =>
             navigate(
               createScrollRoute(
@@ -286,19 +241,10 @@ const Home: React.FC = () => {
 
         <CTASection
           id="team-section"
-          overline={getTranslatableContent(
-            teamContent.overline,
-            'home.team.overline'
-          )}
-          title={getTranslatableContent(teamContent.title, 'home.team.title')}
-          subtitle={getTranslatableContent(
-            teamContent.subtitle,
-            'home.team.subtitle'
-          )}
-          buttonText={getStringContent(
-            teamContent.buttonText,
-            'home.team.buttonText'
-          )}
+          overline={renderContent(teamContent.overline, 'home.team.overline')}
+          title={renderContent(teamContent.title, 'home.team.title')}
+          subtitle={renderContent(teamContent.subtitle, 'home.team.subtitle')}
+          buttonText={teamContent.buttonText}
           onButtonClick={() =>
             navigate(
               createScrollRoute(

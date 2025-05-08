@@ -1,3 +1,4 @@
+import { i18n } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,13 +11,26 @@ export class MissingTranslationError extends Error {
 
 const globalMissingKeys = new Set<string>();
 
+export interface LocalizedContentApi {
+  getContent: <T>(k: string) => T | null;
+  getRequiredContent: <T>(k: string) => T;
+  hasTranslation: (k: string) => boolean;
+  currentLang: string;
+  i18n: i18n;
+  missingKeys: string[];
+  allMissingKeys: string[];
+}
+
 /**
  * Enhanced hook to get localized content with error handling for missing translations
  * @param namespace The namespace to look for translations
  * @param prefix Optional prefix for the keys to look up (e.g. 'home' for 'home.title')
  * @returns Object with functions to get content and language info
  */
-export function useLocalizedContent(namespace: string, prefix?: string) {
+export function useLocalizedContent(
+  namespace: string,
+  prefix?: string
+): LocalizedContentApi {
   const { t, i18n } = useTranslation(namespace);
   const [currentLang, setCurrentLang] = useState(i18n.language);
   const [forceRefresh, setForceRefresh] = useState(0);
@@ -28,26 +42,15 @@ export function useLocalizedContent(namespace: string, prefix?: string) {
       const newLang = event?.detail?.language || i18n.language;
       if (newLang !== currentLang) {
         setCurrentLang(newLang);
-        setForceRefresh((prev) => prev + 1); // Force refresh
-        console.log(
-          `Language changed to ${newLang} in useLocalizedContent hook`
-        );
+        setForceRefresh((prev) => prev + 1);
       }
     };
 
-    // Listen for both direct i18n events and custom events
     document.addEventListener(
       'i18n-language-changed',
       handleLanguageChange as EventListener
     );
     i18n.on('languageChanged', handleLanguageChange);
-
-    // Initial check of resources
-    const currentResource = i18n.getResourceBundle(i18n.language, namespace);
-    console.log(
-      `Current ${namespace} resources for ${i18n.language}:`,
-      currentResource
-    );
 
     return () => {
       document.removeEventListener(
@@ -121,19 +124,21 @@ export function useLocalizedContent(namespace: string, prefix?: string) {
           typeof result === 'string' &&
           (result === fullKey || result === '')
         ) {
-          // Track the missing key both locally and globally
-          setMissingKeys((prev) => {
-            const updated = new Set(prev);
-            updated.add(key);
-            return updated;
-          });
-
+          // Record missing key without causing a re-render during component rendering
           const globalKey = `${namespace}:${fullKey}`;
           if (!globalMissingKeys.has(globalKey)) {
             globalMissingKeys.add(globalKey);
-            console.warn(
-              `Missing translation for key: ${fullKey} in ${namespace}`
-            );
+            // Use setTimeout to delay logging and state updates to avoid render-phase updates
+            setTimeout(() => {
+              console.warn(
+                `Missing translation for key: ${fullKey} in ${namespace}`
+              );
+              setMissingKeys((prev) => {
+                const updated = new Set(prev);
+                updated.add(key);
+                return updated;
+              });
+            }, 0);
           }
 
           return null;
@@ -170,7 +175,6 @@ export function useLocalizedContent(namespace: string, prefix?: string) {
     getRequiredContent,
     hasTranslation,
     currentLang,
-    t: memT,
     i18n,
     missingKeys: getMissingKeys(),
     allMissingKeys: getAllMissingKeys(),

@@ -1,15 +1,34 @@
 {
-  "loading": "Loading project details",
-  "updating": "Updating project information",
-  "notFound": "Project not found",
-  "backButton": "Back to Projects",
-  "githubRepository": "GitHub Repository",
-  "visitWebsite": "Visit Website",
-  "technologies": "Technologies Used",
-  "references": "References",
-  "completedOn": "Completed on {{date}}",
-  "metaTitle": "Project: {{title}}",
-  "metaDescription": "View details for {{title}} - a project by our team",
-  "shareProject": "Share this project",
-  "relatedProjects": "Related Projects"
+  "meta": {
+    "title": "Project Details",
+    "description": "Detailed information about this project"
+  },
+  "loading": {
+    "title": "Loading project details...",
+    "error": "Error loading project"
+  },
+  "notFound": {
+    "title": "Project Not Found",
+    "message": "Sorry, the project you are looking for cannot be found.",
+    "button": "Back to Projects"
+  },
+  "details": {
+    "category": "Category",
+    "date": "Date",
+    "technologies": "Technologies",
+    "github": "GitHub Repository",
+    "website": "Live Website",
+    "authors": "Team Members",
+    "references": "References"
+  },
+  "navigation": {
+    "back": "Back to Projects",
+    "next": "Next Project",
+    "previous": "Previous Project"
+  },
+  "cta": {
+    "overline": "Interested in our work?",
+    "title": "Let's discuss your next project",
+    "button": "Contact Us"
+  }
 }

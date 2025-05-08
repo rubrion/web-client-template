@@ -9,6 +9,19 @@ export const HasTimestamps = z.object({
 });
 
 /**
+ * Schema for newsletter subscription emails
+ * Validates that the email is properly formatted
+ */
+export const NewsletterEmailSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+});
+
+/**
+ * Type for newsletter subscription email
+ */
+export type NewsletterEmail = z.infer<typeof NewsletterEmailSchema>;
+
+/**
  * Schema for project references
  */
 export const ProjectReferenceSchema = z.object({
@@ -29,7 +42,7 @@ export const BlogPostSchema = z
   .object({
     id: z.string(),
     title: z.string(),
-    summary: z.string(),
+    description: z.string(),
     content: z.string(), // Required in mock data
     date: z.string().optional(),
     author: z.string().optional(),

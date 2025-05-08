@@ -35,7 +35,7 @@ import {
   throttle,
 } from '../../utils/animationUtils';
 import { isHeroPage } from '../../utils/navigationUtils';
-import { getStringContent } from '../../utils/translationUtils';
+import MissingTranslation from '../translation/MissingTranslation';
 import LanguageSwitcher from './LanguageSwitcher';
 
 interface NavItem {
@@ -114,7 +114,7 @@ const defaultNavItems: NavItem[] = [
 const Navbar: React.FC<NavbarProps> = ({
   transparent = false,
   logoSrc = '/logo.svg',
-  logoText = 'RAIA',
+  logoText = 'START',
   navItems = defaultNavItems,
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -124,13 +124,13 @@ const Navbar: React.FC<NavbarProps> = ({
   );
   const [scrolled, setScrolled] = useState(true);
   const [beyondHero, setBeyondHero] = useState(false);
-  const { getContent } = useLocalizedContent('navigation');
+  const { getContent, getRequiredContent } = useLocalizedContent('navigation');
   const location = useLocation();
   const { visible, resetVisibility } = useScrollDirection();
 
   const translations = {
-    toggleTheme: getContent<string>('common.toggleTheme'),
-    mobileMenu: getContent<string>('common.mobileMenu'),
+    toggleTheme: getRequiredContent<string>('common.toggleTheme'),
+    mobileMenu: getRequiredContent<string>('common.mobileMenu'),
     menu: Object.fromEntries(
       navItems.map((item) => [
         item.label,
@@ -188,10 +188,17 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
+  // Helper function to render content or MissingTranslation component when null
+  const renderTranslation = (content: string | null, key: string) => {
+    return (
+      content ?? <MissingTranslation translationKey={key} showTooltip={true} />
+    );
+  };
+
   const translatedNavItems = React.useMemo(() => {
     return navItems.map((item) => ({
       ...item,
-      translatedLabel: getStringContent(
+      translatedLabel: renderTranslation(
         translations.menu[item.label],
         `navigation.menu.${item.label}`
       ),
@@ -299,10 +306,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <IconButton
                     color="inherit"
                     onClick={toggleTheme}
-                    aria-label={getStringContent(
-                      translations.toggleTheme,
-                      'navigation.common.toggleTheme'
-                    )}
+                    aria-label={translations.toggleTheme}
                     sx={{
                       mr: 1,
                       color: useWhiteContent
@@ -322,10 +326,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <IconButton
                     color="inherit"
                     onClick={handleDrawerToggle}
-                    aria-label={getStringContent(
-                      translations.mobileMenu,
-                      'navigation.common.mobileMenu'
-                    )}
+                    aria-label={translations.mobileMenu}
                     sx={{
                       color: useWhiteContent
                         ? whiteColor
@@ -410,10 +411,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <IconButton
                     color="inherit"
                     onClick={toggleTheme}
-                    aria-label={getStringContent(
-                      translations.toggleTheme,
-                      'navigation.common.toggleTheme'
-                    )}
+                    aria-label={translations.toggleTheme}
                     sx={{
                       ml: 1,
                       color: useWhiteContent

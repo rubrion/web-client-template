@@ -10,8 +10,13 @@ import { ContentProvider } from './context/ContentContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { TranslationProvider } from './context/TranslationContext';
+import { TenantProvider } from './core/tenant';
 import AppRoutes from './routes/routes';
 import { setupAnimationControl } from './utils/animationUtils';
+import {
+  installNetworkDebugHooks,
+  logDataSourceInfo,
+} from './utils/debugUtils';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -78,6 +83,18 @@ const App: React.FC = () => {
       document.body.classList.remove('app-loading');
     }, 100);
 
+    // Add debug utilities for development
+    if (import.meta.env.DEV) {
+      logDataSourceInfo();
+      installNetworkDebugHooks();
+
+      // Log a simple guide
+      console.log(
+        '%c[Guide] To switch data sources, click the Debug button in the bottom left corner',
+        'background: #333; color: white; padding: 4px 8px; border-radius: 4px;'
+      );
+    }
+
     return () => {
       document.head.removeChild(styleElement);
       cleanupAnimationControl();
@@ -87,30 +104,32 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <TranslationProvider>
-            <ContentProvider>
-              <LanguageUpdater />
-              <div className="app-container">
-                <Suspense
-                  fallback={
-                    <LoadingIndicator
-                      message="Loading application..."
-                      fullHeight
-                    />
-                  }
-                >
-                  <AppRoutes />
-                </Suspense>
-              </div>
-              {import.meta.env.DEV && <DataSourceToggle />}
-            </ContentProvider>
-          </TranslationProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <TenantProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <TranslationProvider>
+              <ContentProvider>
+                <LanguageUpdater />
+                <div className="app-container">
+                  <Suspense
+                    fallback={
+                      <LoadingIndicator
+                        message="Loading application..."
+                        fullHeight
+                      />
+                    }
+                  >
+                    <AppRoutes />
+                  </Suspense>
+                </div>
+                {import.meta.env.DEV && <DataSourceToggle />}
+              </ContentProvider>
+            </TranslationProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </TenantProvider>
   );
 };
 

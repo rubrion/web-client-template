@@ -61,8 +61,9 @@ const getFirebase = async () => {
 
 /**
  * Get paginated documents from a Firestore collection
+ * Collection path should include the tenant, e.g. 'blogs/acme/posts'
  *
- * @param colPath Collection path
+ * @param colPath Collection path including tenant
  * @param page Page number (1-indexed)
  * @param perPage Number of items per page
  * @returns Paginated response with items and metadata
@@ -72,78 +73,117 @@ export async function getPaginated<T extends { id: string }>(
   page: number,
   perPage: number
 ): Promise<PaginatedResponse<T>> {
+  // For debugging
+  console.log(`Fetching documents from collection: ${colPath}`);
+
+  // Ensure the collection path has an odd number of segments (for a valid collection reference)
+  let finalPath = colPath;
+  const segments = colPath.split('/').filter(Boolean);
+
+  if (segments.length % 2 === 0) {
+    // If even number (like "blogs/demo"), append "documents" to make it a valid collection
+    finalPath = `${colPath}/documents`;
+    console.log(`Adjusted collection path to: ${finalPath}`);
+  }
+
   const firebase = await getFirebase();
   const { db, collection, getDocs, query, orderBy, limit, startAfter } =
     firebase;
 
-  // First, get total count - not efficient, but Firestore doesn't provide count API
-  const colRef = collection(db, colPath);
-  const snapshot = await getDocs(query(colRef));
-  const totalItems = snapshot.size;
-  const totalPages = Math.ceil(totalItems / perPage);
+  try {
+    // First, get total count - not efficient, but Firestore doesn't provide count API
+    const colRef = collection(db, finalPath);
+    const snapshot = await getDocs(query(colRef));
+    const totalItems = snapshot.size;
+    const totalPages = Math.ceil(totalItems / perPage);
 
-  // Adjust page if it's out of bounds
-  page = Math.max(1, Math.min(page, totalPages || 1));
+    console.log(`Found ${totalItems} documents in collection ${finalPath}`);
 
-  // Now get the actual page data with pagination
-  let queryRef = query(colRef, orderBy('createdAt', 'desc'), limit(perPage));
+    // Adjust page if it's out of bounds
+    page = Math.max(1, Math.min(page, totalPages || 1));
 
-  // If not the first page, need to use startAfter with cursor
-  if (page > 1) {
-    // Get the last document from the previous page
-    const previousPageQuery = query(
-      colRef,
-      orderBy('createdAt', 'desc'),
-      limit((page - 1) * perPage)
-    );
-    const previousPageDocs = await getDocs(previousPageQuery);
-    const lastVisible = previousPageDocs.docs[previousPageDocs.docs.length - 1];
+    // Now get the actual page data with pagination
+    let queryRef = query(colRef, orderBy('createdAt', 'desc'), limit(perPage));
 
-    if (lastVisible) {
-      queryRef = query(
+    // If not the first page, need to use startAfter with cursor
+    if (page > 1) {
+      // Get the last document from the previous page
+      const previousPageQuery = query(
         colRef,
         orderBy('createdAt', 'desc'),
-        startAfter(lastVisible),
-        limit(perPage)
+        limit((page - 1) * perPage)
       );
+      const previousPageDocs = await getDocs(previousPageQuery);
+      const lastVisible =
+        previousPageDocs.docs[previousPageDocs.docs.length - 1];
+
+      if (lastVisible) {
+        queryRef = query(
+          colRef,
+          orderBy('createdAt', 'desc'),
+          startAfter(lastVisible),
+          limit(perPage)
+        );
+      }
     }
+
+    // Get the current page data
+    const pageSnapshot = await getDocs(queryRef);
+    const items = pageSnapshot.docs.map((docSnapshot) => {
+      return { id: docSnapshot.id, ...docSnapshot.data() } as unknown as T;
+    });
+
+    return {
+      items,
+      totalPages,
+      currentPage: page,
+      totalItems,
+    };
+  } catch (error) {
+    console.error(`Error fetching documents from ${finalPath}:`, error);
+    throw error;
   }
-
-  // Get the current page data
-  const pageSnapshot = await getDocs(queryRef);
-  const items = pageSnapshot.docs.map((docSnapshot) => {
-    return { id: docSnapshot.id, ...docSnapshot.data() } as unknown as T;
-  });
-
-  return {
-    items,
-    totalPages,
-    currentPage: page,
-    totalItems,
-  };
 }
 
 /**
  * Get a document by ID from a Firestore collection
+ * Document path should include the tenant, e.g. 'blogs/acme/posts/post-1'
  *
- * @param colPath Collection path
- * @param id Document ID
+ * @param path Document path including tenant and ID
  * @returns Document data with ID
  * @throws Error if document not found
  */
 export async function getById<T extends { id: string }>(
-  colPath: string,
-  id: string
+  path: string
 ): Promise<T> {
+  // For debugging
+  console.log(`Fetching document: ${path}`);
+
+  // Ensure path has an even number of segments (for a valid document reference)
+  let finalPath = path;
+  const segments = path.split('/').filter(Boolean);
+
+  if (segments.length % 2 !== 0) {
+    console.error(
+      `Invalid document path: ${path}. Document paths must have even number of segments.`
+    );
+    throw new Error(`Invalid document path: ${path}`);
+  }
+
   const firebase = await getFirebase();
   const { db, doc, getDoc } = firebase;
 
-  const docRef = doc(db, colPath, id);
-  const snapshot = await getDoc(docRef);
+  try {
+    const docRef = doc(db, finalPath);
+    const snapshot = await getDoc(docRef);
 
-  if (!snapshot.exists()) {
-    throw new Error(`Document not found: ${colPath}/${id}`);
+    if (!snapshot.exists()) {
+      throw new Error(`Document not found: ${finalPath}`);
+    }
+
+    return { id: snapshot.id, ...snapshot.data() } as unknown as T;
+  } catch (error) {
+    console.error(`Error fetching document ${finalPath}:`, error);
+    throw error;
   }
-
-  return { id: snapshot.id, ...snapshot.data() } as unknown as T;
 }

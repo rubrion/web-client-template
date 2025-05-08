@@ -1,4 +1,4 @@
-import { Box, Container, ContainerProps } from '@mui/material';
+import { Box, Container, ContainerProps, SxProps, Theme } from '@mui/material';
 import { motion } from 'framer-motion';
 import React from 'react';
 
@@ -13,6 +13,7 @@ export interface SectionProps extends Omit<SectionHeaderProps, 'align'> {
   backgroundColor?: string;
   py?: number;
   align?: 'left' | 'center' | 'right';
+  sx?: SxProps<Theme>;
 }
 
 const Section: React.FC<SectionProps> = ({
@@ -27,6 +28,7 @@ const Section: React.FC<SectionProps> = ({
   backgroundImage,
   py = 6,
   children,
+  sx,
 }) => {
   return (
     <Box
@@ -41,6 +43,7 @@ const Section: React.FC<SectionProps> = ({
         backgroundSize: backgroundImage ? 'cover' : undefined,
         backgroundPosition: backgroundImage ? 'center' : undefined,
         position: 'relative',
+        ...sx,
       }}
     >
       {/* Background decoration for dark mode */}

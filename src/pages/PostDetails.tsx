@@ -1,174 +1,186 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Divider,
-  Paper,
-  Typography,
-} from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
-import { Breadcrumbs, LoadingIndicator } from '../components/ui';
-import type { BreadcrumbItem } from '../components/ui/Breadcrumbs';
+import ContentDetailPage, {
+  MetaDisplay,
+  SidebarConfig,
+} from '../components/content/ContentDetailPage';
+import { useContentById } from '../hooks/useContent';
 import { useLocalizedContent } from '../hooks/useLocalizedContent';
 import BaseLayout from '../layouts/BaseLayout';
 import ROUTES from '../routes';
-import { BlogPost, fetchBlogPostById } from '../services/blog';
-import { createScrollRoute } from '../utils/navigationUtils';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../utils/translationUtils';
+import { MockedBlogPost } from '../services/blog';
 
-const PostDetail: React.FC = () => {
+const PostDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { getContent } = useLocalizedContent('screens', 'post');
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  const postData = {
-    loading: getContent<string>('loading'),
-    updating: getContent<string>('updating'),
-    notFound: getContent<string>('notFound'),
-    backButton: getContent<string>('backButton'),
-    publishedOn: getContent<string>('publishedOn'),
-  };
-
-  const breadcrumbs: BreadcrumbItem[] = useMemo(
-    () => [
-      {
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Blog',
-        href: ROUTES.BLOG.LIST.path,
-      },
-      {
-        label: post?.title || 'Blog Post',
-      },
-    ],
-    [post?.title]
+  const { getRequiredContent: getPostContent } =
+    useLocalizedContent('postDetail');
+  const { getRequiredContent: getNavContent } = useLocalizedContent(
+    'navigation',
+    'menu'
   );
 
-  useEffect(() => {
-    const getPost = async () => {
-      try {
-        if (id) {
-          const data = await fetchBlogPostById(id);
-          setPost(data);
-        }
-      } catch (error) {
-        console.error(`Failed to fetch post with ID ${id}:`, error);
-      } finally {
-        setLoading(false);
+  // Since id comes from URL params, make a safety check
+  if (!id) {
+    return (
+      <BaseLayout>
+        <div>Invalid post ID</div>
+      </BaseLayout>
+    );
+  }
+
+  // Pre-fetch post to build sidebar sections based on the data
+  const { document: post } = useContentById<MockedBlogPost>('blog', id);
+
+  // Breadcrumb items
+  const breadcrumbs = [
+    {
+      label: getNavContent<string>('home'),
+      href: ROUTES.PUBLIC.HOME.path,
+    },
+    {
+      label: getNavContent<string>('blog'),
+      href: ROUTES.BLOG.ROOT.path,
+    },
+    {
+      label: post?.title || id,
+    },
+  ];
+
+  // Prepare sidebar meta sections based on available post data
+  const metaSections: MetaDisplay[] = [];
+
+  // Only add sections if we have the post data
+  if (post) {
+    // Author info
+    if (post.meta?.author) {
+      const authorItems = [
+        {
+          label: getPostContent<string>('details.author'),
+          value: post.meta.author,
+        },
+      ];
+
+      // Add author email if available
+      if (post.meta?.email) {
+        authorItems.push({
+          label: getPostContent<string>('details.email'),
+          value: (
+            <a href={`mailto:${post.meta.email}`} style={{ color: 'inherit' }}>
+              {post.meta.email}
+            </a>
+          ),
+        });
       }
-    };
 
-    getPost();
-  }, [id]);
+      metaSections.push({
+        title: getPostContent<string>('sections.author'),
+        values: authorItems,
+      });
+    }
 
-  const handleBackToBlog = () => {
-    navigate(createScrollRoute(ROUTES.BLOG.LIST.path, 'articles-section'));
+    // Post details section
+    const detailItems = [];
+
+    if (post.date) {
+      detailItems.push({
+        label: getPostContent<string>('details.publishedOn'),
+        value: new Date(post.date).toLocaleDateString(),
+      });
+    }
+
+    if (post.category) {
+      detailItems.push({
+        label: getPostContent<string>('details.category'),
+        value: post.category,
+      });
+    }
+
+    if (post.meta?.readTime) {
+      detailItems.push({
+        label: getPostContent<string>('details.readTime'),
+        value: `${post.meta.readTime} min`,
+      });
+    }
+
+    if (detailItems.length > 0) {
+      metaSections.push({
+        title: getPostContent<string>('sections.details'),
+        values: detailItems,
+      });
+    }
+
+    // Tags section
+    if (post.meta?.tags && post.meta.tags.length > 0) {
+      metaSections.push({
+        title: getPostContent<string>('sections.tags'),
+        values: [
+          {
+            label: '',
+            value: (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {post.meta.tags.map((tag: string, idx: number) => (
+                  <span
+                    key={idx}
+                    style={{
+                      backgroundColor: '#f0f0f0',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      marginRight: '4px',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ),
+          },
+        ],
+      });
+    }
+  }
+
+  // Complete sidebar configuration
+  const sidebar: SidebarConfig = {
+    metaSections,
+    newsletter: {
+      title: getPostContent<string>('newsletter.title'),
+      description: getPostContent<string>('newsletter.description'),
+      buttonText: getPostContent<string>('newsletter.button'),
+      buttonLink: ROUTES.PUBLIC.CONTACT.path,
+    },
   };
 
-  if (loading && !post) {
-    return (
-      <BaseLayout>
-        <Breadcrumbs items={breadcrumbs.slice(0, 2)} />
-        <Container maxWidth="lg" sx={{ my: 8 }}>
-          <LoadingIndicator
-            message={getStringContent(postData.loading, 'post.loading')}
-            fullHeight
-          />
-        </Container>
-      </BaseLayout>
-    );
-  }
-
-  if (!post) {
-    return (
-      <BaseLayout>
-        <Breadcrumbs items={breadcrumbs.slice(0, 2)} />
-        <Container maxWidth="lg" sx={{ my: 8 }}>
-          <Typography variant="h5" sx={{ textAlign: 'center' }}>
-            {getTranslatableContent(postData.notFound, 'post.notFound')}
-          </Typography>
-          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" onClick={handleBackToBlog}>
-              {getStringContent(postData.backButton, 'post.backButton')}
-            </Button>
-          </Box>
-        </Container>
-      </BaseLayout>
-    );
-  }
-
-  const postDate = post.date || 'March 15, 2025';
-  const author = post.author || 'Admin';
-  const categories = post.categories || ['General'];
-
-  const publishedText = getStringContent(
-    postData.publishedOn,
-    'post.publishedOn'
-  )
-    .replace('{{date}}', postDate)
-    .replace('{{author}}', author);
+  // CTA configuration
+  const cta = {
+    overline: getPostContent<string>('cta.overline'),
+    title: getPostContent<string>('cta.title'),
+    buttons: [
+      {
+        text: getPostContent<string>('cta.button'),
+        href: ROUTES.BLOG.ROOT.path,
+        variant: 'outlined' as const,
+      },
+    ],
+  };
 
   return (
     <BaseLayout>
-      <Breadcrumbs items={breadcrumbs} />
-      <Container maxWidth="lg" sx={{ mt: 1 }}>
-        <Typography variant="h3" component="h1" gutterBottom>
-          {post.title}
-        </Typography>
-
-        <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              {publishedText}
-            </Typography>
-            <Box sx={{ mt: 2 }}>
-              {categories.map((category, index) => (
-                <Chip
-                  key={index}
-                  label={category}
-                  size="small"
-                  sx={{ mr: 1, mb: 1 }}
-                />
-              ))}
-            </Box>
-          </Box>
-
-          <Divider sx={{ mb: 4 }} />
-
-          <Box sx={{ '& img': { maxWidth: '100%', height: 'auto' } }}>
-            <div dangerouslySetInnerHTML={{ __html: post.content || '' }} />
-          </Box>
-        </Paper>
-
-        <Box
-          sx={{
-            mt: 6,
-            mb: 8,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleBackToBlog}
-          >
-            {getStringContent(postData.backButton, 'post.backButton')}
-          </Button>
-        </Box>
-      </Container>
+      <ContentDetailPage
+        resource="blog"
+        i18nBase="screens.postDetail"
+        id={id}
+        breadcrumbs={breadcrumbs}
+        linkToList={ROUTES.BLOG.ROOT.path}
+        sidebar={sidebar}
+        cta={cta}
+        // Post email is handled in sidebar and in ContentDetailPage component
+      />
     </BaseLayout>
   );
 };
 
-export default PostDetail;
+export default PostDetails;

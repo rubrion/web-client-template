@@ -1,326 +1,200 @@
-import ArticleIcon from '@mui/icons-material/Article';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkIcon from '@mui/icons-material/Link';
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Divider,
-  Grid,
-  Link,
-  Paper,
-  Typography,
-} from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Paper, Typography, useTheme } from '@mui/material';
+import React, { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { Breadcrumbs, LoadingIndicator } from '../components/ui';
-import type { BreadcrumbItem } from '../components/ui/Breadcrumbs';
-import PlaceholderImage from '../components/ui/PlaceholderImage';
+import ContentDetailPage, {
+  MetaDisplay,
+  SidebarConfig,
+} from '../components/content/ContentDetailPage';
+import { TeamMemberType } from '../components/ui/Card/TeamCard';
+import { useContentById } from '../hooks/useContent';
 import { useLocalizedContent } from '../hooks/useLocalizedContent';
 import BaseLayout from '../layouts/BaseLayout';
 import ROUTES from '../routes';
-import { fetchProjectById, Project } from '../services/projects';
-import { createScrollRoute } from '../utils/navigationUtils';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../utils/translationUtils';
+import { MockProject } from '../services/projects';
 
 const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { getContent } = useLocalizedContent('screens', 'projectDetail');
-  const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const theme = useTheme();
 
-  // Use getContent for translations
-  const translations = {
-    loading: getContent<string>('loading'),
-    updating: getContent<string>('updating'),
-    notFound: getContent<string>('notFound'),
-    backButton: getContent<string>('backButton'),
-    githubRepository: getContent<string>('githubRepository'),
-    visitWebsite: getContent<string>('visitWebsite'),
-    technologies: getContent<string>('technologies'),
-    references: getContent<string>('references'),
-    completedOn: getContent<string>('completedOn'),
-  };
-
-  // Create simpler breadcrumbs items without icons
-  const breadcrumbs: BreadcrumbItem[] = useMemo(
-    () => [
-      {
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Projects',
-        href: ROUTES.PROJECTS.LIST.path,
-      },
-      {
-        label: project?.title || 'Project Details',
-      },
-    ],
-    [project?.title]
+  // Use the hook directly for project details translations
+  const { getRequiredContent: getProjectText } = useLocalizedContent(
+    'screens',
+    'projectDetail'
+  );
+  const { getRequiredContent: getNavText } = useLocalizedContent(
+    'navigation',
+    'menu'
   );
 
-  // Fetch project data only when ID changes
-  useEffect(() => {
-    let isMounted = true;
+  // Since id comes from URL params, make a safety check
+  if (!id) {
+    return (
+      <BaseLayout>
+        <Paper sx={{ p: 3, m: 3, borderRadius: theme.shape.borderRadius }}>
+          <Typography variant="h5" color="error">
+            Invalid project ID
+          </Typography>
+        </Paper>
+      </BaseLayout>
+    );
+  }
 
-    const getProject = async () => {
-      if (!id) return;
+  // Pre-fetch project to build sidebar sections based on the data
+  // Note: The ContentDetailPage will do its own fetching, this is just for sidebar config
+  const { document: project } = useContentById<MockProject>('projects', id);
 
-      try {
-        const data = await fetchProjectById(id);
+  // Breadcrumb items with safe translation
+  const breadcrumbs = [
+    {
+      label: getNavText<string>('home'),
+      href: ROUTES.PUBLIC.HOME.path,
+    },
+    {
+      label: getNavText<string>('projects'),
+      href: ROUTES.PROJECTS.ROOT.path,
+    },
+    {
+      label: project?.title || id, // Will use real title if available, otherwise ID
+    },
+  ];
 
-        if (isMounted) {
-          setProject(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(`Failed to fetch project with ID ${id}:`, error);
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
+  // Prepare participants if they exist on the project data
+  const participants: TeamMemberType[] = useMemo(() => {
+    if (!project?.meta?.team) return [];
 
-    getProject();
+    return project.meta.team.map((member: any) => ({
+      name: member.name || '',
+      role: member.role || '',
+      image: member.image || '',
+      contact: member.email,
+    }));
+  }, [project]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
+  // Prepare sidebar meta sections based on available project data
+  const metaSections: MetaDisplay[] = [];
 
-  const handleBackToProjects = () => {
-    navigate(createScrollRoute(ROUTES.PROJECTS.LIST.path, 'projects-section'));
+  // Only add sections if we have the project data
+  if (project) {
+    // Basic info section
+    const basicInfoItems = [];
+
+    if (project.category) {
+      basicInfoItems.push({
+        label: getProjectText<string>('details.category'),
+        value: project.category,
+      });
+    }
+
+    if (project.date) {
+      basicInfoItems.push({
+        label: getProjectText<string>('details.date'),
+        value: project.date,
+      });
+    }
+
+    if (basicInfoItems.length > 0) {
+      metaSections.push({
+        title: getProjectText<string>('sections.basicInfo'),
+        values: basicInfoItems,
+      });
+    }
+
+    // Technologies section
+    if (project.meta?.technologies && project.meta.technologies.length > 0) {
+      metaSections.push({
+        title: getProjectText<string>('details.technologies'),
+        values: [
+          {
+            label: '',
+            value: (
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '4px',
+                }}
+              >
+                {project.meta.technologies.map((tech: string, idx: number) => (
+                  <span
+                    key={idx}
+                    style={{
+                      backgroundColor:
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(255,255,255,0.08)'
+                          : 'rgba(0,0,0,0.06)',
+                      padding: '2px 8px',
+                      borderRadius: theme.shape.borderRadius,
+                      marginRight: '4px',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                      color: theme.palette.text.primary,
+                    }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            ),
+          },
+        ],
+      });
+    }
+  }
+
+  // External links based on project data
+  const links = [];
+
+  if (project?.meta?.github) {
+    links.push({
+      label: getProjectText<string>('details.github'),
+      url: project.meta.github,
+    });
+  }
+
+  if (project?.meta?.website) {
+    links.push({
+      label: getProjectText<string>('details.website'),
+      url: project.meta.website,
+    });
+  }
+
+  // Complete sidebar configuration
+  const sidebar: SidebarConfig = {
+    metaSections,
+    links: links.length > 0 ? links : undefined,
   };
 
-  // Loading state
-  if (loading && !project) {
-    return (
-      <BaseLayout>
-        <Breadcrumbs items={breadcrumbs.slice(0, 2)} />
-        <Container maxWidth="lg" sx={{ my: 8 }}>
-          <LoadingIndicator
-            message={getStringContent(
-              translations.loading,
-              'projectDetail.loading'
-            )}
-            fullHeight
-          />
-        </Container>
-      </BaseLayout>
-    );
-  }
-
-  // Not found state
-  if (!project) {
-    return (
-      <BaseLayout>
-        <Breadcrumbs items={breadcrumbs.slice(0, 2)} />
-        <Container maxWidth="lg" sx={{ my: 8 }}>
-          <Typography variant="h5" sx={{ textAlign: 'center' }}>
-            {getTranslatableContent(
-              translations.notFound,
-              'projectDetail.notFound'
-            )}
-          </Typography>
-          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" onClick={handleBackToProjects}>
-              {getStringContent(
-                translations.backButton,
-                'projectDetail.backButton'
-              )}
-            </Button>
-          </Box>
-        </Container>
-      </BaseLayout>
-    );
-  }
-
-  // Prepare display values
-  const projectDate = project.date || 'March 15, 2025';
-  const technologies = project.technologies || [];
-  const completedText = getStringContent(
-    translations.completedOn,
-    'projectDetail.completedOn'
-  ).replace('{{date}}', projectDate);
+  // CTA configuration
+  const cta = {
+    overline: getProjectText<string>('cta.overline'),
+    title: getProjectText<string>('cta.title'),
+    buttons: [
+      {
+        text: getProjectText<string>('cta.button'),
+        href: ROUTES.PUBLIC.CONTACT.path,
+        variant: 'outlined' as const,
+      },
+      {
+        text: getProjectText<string>('navigation.back'),
+        href: ROUTES.PROJECTS.ROOT.path,
+        variant: 'outlined' as const,
+      },
+    ],
+  };
 
   return (
     <BaseLayout>
-      <Breadcrumbs items={breadcrumbs} />
-      <Container maxWidth="lg" sx={{ mt: 1 }}>
-        <Paper elevation={1} sx={{ p: 4, borderRadius: 2 }}>
-          <Grid container spacing={4}>
-            <Grid size={{ xs: 12 }}>
-              {project.image ? (
-                <Box
-                  component="img"
-                  src={project.image}
-                  alt={project.title}
-                  sx={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: 400,
-                    objectFit: 'cover',
-                    borderRadius: 1,
-                  }}
-                  onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                    // Handle image loading errors
-                    e.currentTarget.style.display = 'none';
-                    // Display a placeholder instead - this will be handled by the component below
-                  }}
-                />
-              ) : (
-                <Box sx={{ maxHeight: 400 }}>
-                  <PlaceholderImage
-                    type="project"
-                    title={project.title}
-                    aspectRatio="21/9"
-                  />
-                </Box>
-              )}
-            </Grid>
-
-            <Grid size={{ xs: 12 }}>
-              <Typography variant="h3" component="h1" gutterBottom>
-                {project.title}
-              </Typography>
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  color: 'text.secondary',
-                  typography: 'body1',
-                  mb: 2,
-                }}
-              >
-                {project.category && (
-                  <Chip label={project.category} size="small" sx={{ mr: 1 }} />
-                )}
-                <span>{completedText}</span>
-              </Box>
-
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                {project.description}
-              </Typography>
-
-              <Box sx={{ mt: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                {project.github && (
-                  <Button
-                    variant="outlined"
-                    startIcon={<GitHubIcon />}
-                    component={Link}
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {getStringContent(
-                      translations.githubRepository,
-                      'projectDetail.githubRepository'
-                    )}
-                  </Button>
-                )}
-
-                {project.website && (
-                  <Button
-                    variant="outlined"
-                    startIcon={<LinkIcon />}
-                    component={Link}
-                    href={project.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {getStringContent(
-                      translations.visitWebsite,
-                      'projectDetail.visitWebsite'
-                    )}
-                  </Button>
-                )}
-              </Box>
-
-              <Divider sx={{ my: 4 }} />
-
-              {technologies.length > 0 && (
-                <Box sx={{ mb: 4 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {getTranslatableContent(
-                      translations.technologies,
-                      'projectDetail.technologies'
-                    )}
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {technologies.map((tech, index) => (
-                      <Chip key={index} label={tech} />
-                    ))}
-                  </Box>
-                </Box>
-              )}
-
-              <Box sx={{ '& img': { maxWidth: '100%', height: 'auto' } }}>
-                <div
-                  dangerouslySetInnerHTML={{ __html: project.content || '' }}
-                />
-              </Box>
-
-              {project.references && project.references.length > 0 && (
-                <Box sx={{ mt: 4 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {getTranslatableContent(
-                      translations.references,
-                      'projectDetail.references'
-                    )}
-                  </Typography>
-                  <Box component="ul" sx={{ pl: 2 }}>
-                    {project.references.map((ref, index) => (
-                      <Box component="li" key={index} sx={{ mb: 1 }}>
-                        <Link
-                          href={ref.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          {ref.type === 'article' ? (
-                            <ArticleIcon fontSize="small" />
-                          ) : (
-                            <LinkIcon fontSize="small" />
-                          )}
-                          {ref.title}
-                        </Link>
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
-              )}
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Box
-          sx={{
-            mt: 6,
-            mb: 8,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleBackToProjects}
-          >
-            {getStringContent(
-              translations.backButton,
-              'projectDetail.backButton'
-            )}
-          </Button>
-        </Box>
-      </Container>
+      <ContentDetailPage
+        resource="projects"
+        i18nBase="screens.projectDetail"
+        id={id}
+        breadcrumbs={breadcrumbs}
+        linkToList={ROUTES.PROJECTS.ROOT.path}
+        sidebar={sidebar}
+        cta={cta}
+        participants={participants}
+      />
     </BaseLayout>
   );
 };

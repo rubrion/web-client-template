@@ -83,5 +83,15 @@
   },
   "ui": {
     "scrollToTop": "Scroll back to top"
+  },
+  "blog": {
+    "hero": {
+      "subscribeButton": "Subscribe to Newsletter"
+    }
+  },
+  "projects": {
+    "hero": {
+      "buttonText": "View Services"
+    }
   }
 }

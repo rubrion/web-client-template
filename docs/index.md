@@ -4,12 +4,14 @@ Welcome to the documentation for the Rubrion Web Client Template. This documenta
 
 ## Table of Contents
 
+- [Architecture Overview](./architecture-overview.md) - High-level overview of application structure
+- [Component Library](./component-library.md) - Documentation for UI components
 - [Data Services](./data-services.md) - Documentation for the data service layer implementation
-- Architecture Overview (coming soon)
-- Component Library (coming soon)
-- Routing System (coming soon)
-- Internationalization (coming soon)
-- Theming (coming soon)
+- [Routing System](./routing-system.md) - Documentation for the routing system
+- [Multi-tenant Architecture](./multi-tenant.md) - Documentation for multi-tenant capabilities
+- [Internationalization](./i18n.md) - Documentation for internationalization
+- [Theming](./theming.md) - Documentation for theme customization
+- [Firestore Integration](./firestore-sync.md) - Guide for testing Firestore integration
 
 ## Getting Started
 
@@ -27,11 +29,17 @@ Then start the development server:
 npm run dev
 ```
 
+For testing with a specific tenant:
+
+```bash
+npm run dev -- --tenant=your-tenant-name
+```
+
 ## Environment Configuration
 
 The application uses the following environment variables:
 
-- `VITE_API_URL` - Base URL for the API
+- `VITE_API_URL` - Base URL for the API (supports {tenant} placeholder)
 - `VITE_USE_FIRESTORE` - Set to 'true' to use Firestore instead of the REST API
 - `VITE_FIREBASE_CONFIG` - JSON string containing Firebase configuration
 - `VITE_ENABLE_ANALYTICS` - Set to 'true' to enable analytics
@@ -45,3 +53,5 @@ The application uses the following environment variables:
 - `npm run preview` - Preview the production build locally
 - `npm run test` - Run tests
 - `npm run lint` - Run linting
+- `npm run seed:tenant` - Seed data for a specific tenant
+- `npm run seed:all` - Seed data for all configured tenants

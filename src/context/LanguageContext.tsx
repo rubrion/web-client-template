@@ -3,38 +3,31 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
-  useRef,
+  useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
 
-interface Language {
-  code: string;
-  name: string;
-  flag?: string;
+// Define available languages
+export const AVAILABLE_LANGUAGES = ['en', 'es', 'pt'] as const;
+export type SupportedLanguage = (typeof AVAILABLE_LANGUAGES)[number];
+
+// Update the context type to include language property
+export interface LanguageContextType {
+  language: SupportedLanguage;
+  changeLanguage: (lang: SupportedLanguage) => void;
+  isRtl: boolean;
 }
 
-interface LanguageContextType {
-  currentLanguage: string;
-  languages: Language[];
-  changeLanguage: (code: string) => void;
-}
+const defaultLanguage: SupportedLanguage = 'en';
 
-const languages: Language[] = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Español' },
-  { code: 'pt', name: 'Português' },
-];
-
+// Create the context with proper types
 const LanguageContext = createContext<LanguageContextType>({
-  currentLanguage: 'en',
-  languages,
+  language: defaultLanguage,
   changeLanguage: () => {},
+  isRtl: false,
 });
 
-export const useLanguage = () => useContext(LanguageContext);
-
-interface LanguageProviderProps {
+export interface LanguageProviderProps {
   children: ReactNode;
 }
 
@@ -42,90 +35,71 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
 }) => {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isInitialMount = useRef(true);
-  const lastPathRef = useRef(location.pathname);
-  const processingLanguageChange = useRef(false);
+  const [language, setLanguage] = useState<SupportedLanguage>(() => {
+    // Get stored language from localStorage or URL param
+    const storedLang = localStorage.getItem('i18nextLng');
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
 
-  // Get the simple language code from potentially hyphenated code (e.g., 'en-US' -> 'en')
-  const getSimpleLanguageCode = (code: string): string => {
-    return code.split('-')[0];
+    // Check if the language is supported
+    const isValidLanguage = (
+      lang?: string | null
+    ): lang is SupportedLanguage => {
+      return !!lang && AVAILABLE_LANGUAGES.includes(lang as SupportedLanguage);
+    };
+
+    // Priority: URL param > localStorage > browser preference > default
+    if (isValidLanguage(langParam)) {
+      return langParam;
+    }
+
+    if (isValidLanguage(storedLang)) {
+      return storedLang;
+    }
+
+    // Try to detect browser language
+    const browserLang = navigator.language.split('-')[0];
+    if (isValidLanguage(browserLang)) {
+      return browserLang;
+    }
+
+    return defaultLanguage;
+  });
+
+  const [isRtl, setIsRtl] = useState(false);
+
+  // Change language handler
+  const changeLanguage = (newLang: SupportedLanguage) => {
+    setLanguage(newLang);
+    i18n.changeLanguage(newLang);
+    localStorage.setItem('i18nextLng', newLang);
+
+    // Update URL parameter without reload
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', newLang);
+    window.history.replaceState({}, '', url);
   };
 
-  // Sync URL with current language, but avoid infinite loops
+  // Update RTL status when language changes
   useEffect(() => {
-    const currentLangCode = getSimpleLanguageCode(i18n.language);
+    const isRtlLanguage = ['ar', 'he'].includes(language);
+    setIsRtl(isRtlLanguage);
+    document.documentElement.setAttribute('dir', isRtlLanguage ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', language);
+  }, [language]);
 
-    // Skip on initial mount to prevent double redirects
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-
-      // Don't modify URL or language on initial mount
-      // Let other mechanisms handle this to avoid redirect loops
-      return;
+  // Force sync with i18next
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
     }
-
-    // Prevent processing if we're already handling a language change
-    if (processingLanguageChange.current) {
-      processingLanguageChange.current = false;
-      return;
-    }
-
-    // Only process if the path has actually changed
-    if (location.pathname === lastPathRef.current) {
-      return;
-    }
-
-    lastPathRef.current = location.pathname;
-
-    const pathParts = location.pathname.split('/');
-    const potentialLang = pathParts[1];
-
-    // If URL has a valid language code but different from current, update i18n
-    if (languages.some((lang) => lang.code === potentialLang)) {
-      if (potentialLang !== currentLangCode) {
-        console.log(`Updating language from URL: ${potentialLang}`);
-        i18n.changeLanguage(potentialLang);
-      }
-    }
-  }, [location.pathname, i18n, navigate]);
-
-  // Change language and update URL
-  const changeLanguage = (code: string) => {
-    const currentLangCode = getSimpleLanguageCode(i18n.language);
-
-    if (code === currentLangCode) return;
-
-    console.log(`Manually changing language to: ${code}`);
-    processingLanguageChange.current = true;
-
-    // Change i18n language
-    i18n.changeLanguage(code);
-
-    // Trigger event for components to refresh
-    // Immediately dispatch the event rather than using setTimeout
-    try {
-      const event = new CustomEvent('i18n-language-changed', {
-        detail: { language: code, timestamp: Date.now() },
-      });
-      document.dispatchEvent(event);
-    } catch (error) {
-      console.error('Error dispatching language change event:', error);
-    }
-  };
+  }, [language, i18n]);
 
   return (
-    <LanguageContext.Provider
-      value={{
-        currentLanguage: getSimpleLanguageCode(i18n.language),
-        languages,
-        changeLanguage,
-      }}
-    >
+    <LanguageContext.Provider value={{ language, changeLanguage, isRtl }}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export default LanguageContext;
+export const useLanguage = () => useContext(LanguageContext);

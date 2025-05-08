@@ -9,7 +9,9 @@
     "contact": "Contact",
     "partners": "Partners",
     "projects.title": "Projects",
-    "projects.description": "Explore our projects"
+    "projects.description": "Explore our projects",
+    "blog.title": "Blog",
+    "blog.description": "Read the latest updates and insights"
   },
   "language": {
     "english": "English",

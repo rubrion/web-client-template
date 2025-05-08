@@ -1,6 +1,7 @@
 /**
  * Application configuration and runtime settings
  */
+import { resolveTenant } from './core/tenant';
 
 // Declare global window property for TypeScript
 declare global {
@@ -35,8 +36,12 @@ export const getEnvVariable = (key: string, defaultValue = ''): string => {
 
 /**
  * Get stored data source preference from localStorage
+ * This now always checks localStorage directly to ensure fresh values
  */
-function getStoredPreference(key: string, defaultValue: boolean): boolean {
+export function getStoredPreference(
+  key: string,
+  defaultValue: boolean
+): boolean {
   if (typeof window === 'undefined') return defaultValue;
   const stored = localStorage.getItem(key);
   if (stored === 'true') return true;
@@ -45,18 +50,26 @@ function getStoredPreference(key: string, defaultValue: boolean): boolean {
 }
 
 /**
- * API base URL from environment
+ * API base URL from environment with tenant support
+ * @param tenant Optional tenant override
  */
-export const API_BASE_URL = getEnvVariable('VITE_API_URL', '');
+export function getApiBaseUrl(tenant?: string): string {
+  const baseUrl = getEnvVariable('VITE_API_URL', '');
+  const currentTenant = tenant || resolveTenant();
+
+  return baseUrl.replace('{tenant}', currentTenant);
+}
 
 /**
- * Feature flags
+ * Feature flags with tenant configuration
+ * Base flags can be overridden by tenant configuration
  */
 export const FEATURES = {
   ENABLE_ANALYTICS: getEnvVariable('VITE_ENABLE_ANALYTICS') === 'true',
   ENABLE_NEWSLETTER:
     getEnvVariable('VITE_ENABLE_NEWSLETTER', 'true') !== 'false',
   MAINTENANCE_MODE: getEnvVariable('VITE_MAINTENANCE_MODE') === 'true',
+  MULTI_TENANT: getEnvVariable('VITE_MULTI_TENANT', 'true') === 'true',
 };
 
 /**
@@ -77,15 +90,39 @@ export const EXTERNAL_SERVICES = {
 };
 
 /**
- * Runtime configuration flags
+ * Firebase collection paths
  */
-export const IS_MOCK =
-  typeof window !== 'undefined' &&
-  import.meta.env.DEV &&
-  (window.__IS_MSW_ACTIVE__ === true || getStoredPreference('useMSW', false));
+export const COLLECTIONS = {
+  TENANTS: 'tenants',
+  BLOGS: 'blogs',
+  PROJECTS: 'projects',
+  TRANSLATIONS: 'translations',
+};
 
-export const USE_FIRESTORE =
-  (getEnvVariable('VITE_USE_FIRESTORE') === 'true' ||
-    getStoredPreference('useFirestore', false)) &&
-  !IS_MOCK;
+/**
+ * Get current data source mode - always checks localStorage to ensure fresh values
+ *
+ * @returns Current data source mode configuration
+ */
+export function getDataSourceMode() {
+  // In development, check for MSW
+  const isMswEnabled =
+    typeof window !== 'undefined' &&
+    import.meta.env.DEV &&
+    (window.__IS_MSW_ACTIVE__ === true || getStoredPreference('useMSW', false));
+
+  // Check for Firestore - only if MSW is not enabled
+  const isFirestoreEnabled =
+    !isMswEnabled && getEnvVariable('VITE_USE_FIRESTORE') === 'true';
+
+  return {
+    IS_MOCK: isMswEnabled,
+    USE_FIRESTORE: isFirestoreEnabled,
+  };
+}
+
+// For backwards compatibility
+export const IS_MOCK = getDataSourceMode().IS_MOCK;
+export const USE_FIRESTORE = getDataSourceMode().USE_FIRESTORE;
+
 export const API_PAGE_LIMIT = PAGINATION.DEFAULT_PAGE_SIZE;

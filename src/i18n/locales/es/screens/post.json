@@ -3,5 +3,13 @@
   "updating": "Actualizando contenido del artículo",
   "notFound": "Artículo no encontrado",
   "backButton": "Volver al Blog",
-  "publishedOn": "Publicado el {{date}} por {{author}}"
+  "publishedOn": "Publicado el {{date}} por {{author}}",
+  "newsletter": {
+    "title": "Suscríbete a Nuestro Boletín",
+    "description": "Mantente actualizado con nuestros últimos artículos, noticias y perspectivas.",
+    "button": "Suscríbete Ahora"
+  },
+  "relatedPosts": {
+    "title": "Artículos Relacionados"
+  }
 }

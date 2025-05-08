@@ -5,15 +5,15 @@
     "overline": "BLOG",
     "subscribeButton": "Inscreva-se em Nosso Boletim"
   },
-  "articles": {
+  "content": {
     "overline": "ARTIGOS",
     "title": "Últimos Artigos",
     "readMore": "Leia Mais",
-    "noPostsTitle": "Nenhum Artigo Disponível",
-    "noPostsMessage": "Volte em breve para ver novos conteúdos!"
+    "noItemsTitle": "Nenhum Artigo Disponível",
+    "noItemsMessage": "Volte em breve para ver novos conteúdos!"
   },
   "loading": {
-    "posts": "Carregando artigos do blog",
+    "items": "Carregando artigos do blog",
     "updating": "Atualizando artigos"
   }
 }

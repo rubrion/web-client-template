@@ -11,12 +11,25 @@ export async function initMsw() {
   if (useMSW === 'false') {
     console.log('MSW is disabled based on localStorage preference');
     window.__IS_MSW_ACTIVE__ = false;
-    return;
+    return false;
   }
 
-  await worker.start();
-  window.__IS_MSW_ACTIVE__ = true;
-  console.log('Mock Service Worker initialized');
+  try {
+    await worker.start({
+      onUnhandledRequest: 'bypass',
+      serviceWorker: {
+        url: '/mockServiceWorker.js',
+        options: { scope: '/' },
+      },
+    });
+    window.__IS_MSW_ACTIVE__ = true;
+    console.log('Mock Service Worker initialized');
+    return true;
+  } catch (error) {
+    console.error('Failed to start MSW:', error);
+    window.__IS_MSW_ACTIVE__ = false;
+    return false;
+  }
 }
 
 export const isMswRunning = () => {

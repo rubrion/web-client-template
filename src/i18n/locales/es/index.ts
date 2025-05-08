@@ -7,7 +7,6 @@ import contact from './screens/contact.json';
 import home from './screens/home.json';
 import notFound from './screens/notFound.json';
 import partners from './screens/partners.json';
-import post from './screens/post.json';
 import projects from './screens/projects.json';
 import services from './screens/services.json';
 import team from './screens/team.json';
@@ -21,7 +20,6 @@ const screens = {
   home,
   notFound,
   partners,
-  post,
   projects,
   services,
   team,

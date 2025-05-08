@@ -5,15 +5,16 @@
     "overline": "BLOG",
     "subscribeButton": "Subscribe to Our Newsletter"
   },
-  "articles": {
+  "content": {
     "overline": "ARTICLES",
     "title": "Latest Articles",
     "readMore": "Read More",
-    "noPostsTitle": "No Blog Posts Available",
-    "noPostsMessage": "Check back soon for new content!"
+    "viewDetails": "View Details",
+    "noItemsTitle": "No Blog Posts Available",
+    "noItemsMessage": "Check back soon for new content!"
   },
   "loading": {
-    "posts": "Loading blog posts",
+    "items": "Loading blog posts",
     "updating": "Updating posts"
   }
 }

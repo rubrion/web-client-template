@@ -1,45 +1,114 @@
-import LanguageIcon from '@mui/icons-material/Language';
-import { IconButton, ListItemText, Menu, MenuItem } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Menu, MenuItem, SxProps } from '@mui/material';
+import React, { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useLanguage } from '../../context/LanguageContext';
+import {
+  AVAILABLE_LANGUAGES,
+  SupportedLanguage,
+  useLanguage,
+} from '../../context/LanguageContext';
 
 interface LanguageSwitcherProps {
-  color?: string;
-  sx?: Record<string, any>;
+  variant?: 'icon' | 'text' | 'full';
+  sx?: SxProps;
 }
 
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ sx = {} }) => {
-  const { languages, changeLanguage, currentLanguage } = useLanguage();
+const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
+  variant = 'full',
+  sx,
+}) => {
+  const { language, changeLanguage } = useLanguage();
+  const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  // Force component to update when i18n.language changes
+  const [currentI18nLang, setCurrentI18nLang] = useState(i18n.language);
+
+  useEffect(() => {
+    // Subscribe to language changes from i18next
+    const handleLanguageChanged = (lang: string) => {
+      setCurrentI18nLang(lang);
+    };
+
+    i18n.on('languageChanged', handleLanguageChanged);
+
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, [i18n]);
+
+  // Language labels mapping
+  const languageLabels: Record<SupportedLanguage, string> = {
+    en: 'English',
+    es: 'Español',
+    pt: 'Português',
+  };
+
+  // Get the current language label - now using currentI18nLang to ensure it's up-to-date
+  const activeLanguage = AVAILABLE_LANGUAGES.includes(
+    currentI18nLang as SupportedLanguage
+  )
+    ? (currentI18nLang as SupportedLanguage)
+    : language;
+  const currentLanguageLabel = languageLabels[activeLanguage];
+
+  // Handle menu opening
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  // Handle menu closing and language selection
+  const handleMenuItemClick = (lang: SupportedLanguage) => {
+    setAnchorEl(null);
+
+    if (lang === language) return;
+
+    // Change the language in context
+    changeLanguage(lang);
+
+    // Also directly call i18next to ensure immediate update
+    i18n.changeLanguage(lang);
+
+    // Update URL search params without reloading the page
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('lang', lang);
+
+    // Use navigate to update only the search params without changing the path
+    navigate({ search: searchParams.toString() }, { replace: true });
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleLanguageChange = (lng: string) => {
-    changeLanguage(lng);
-    handleClose();
-  };
+  // Determine what to display based on variant
+  const buttonContent = useMemo(() => {
+    switch (variant) {
+      case 'icon':
+        return activeLanguage.toUpperCase();
+      case 'text':
+        return activeLanguage.toUpperCase();
+      case 'full':
+      default:
+        return currentLanguageLabel;
+    }
+  }, [variant, activeLanguage, currentLanguageLabel]);
 
   return (
-    <>
-      <IconButton
-        onClick={handleClick}
-        color="inherit"
-        aria-label="Select language"
+    <Box>
+      <Button
         aria-controls={open ? 'language-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        sx={sx}
+        onClick={handleClick}
+        sx={{ minWidth: variant === 'icon' ? 'auto' : undefined, ...sx }}
       >
-        <LanguageIcon />
-      </IconButton>
+        {buttonContent}
+      </Button>
       <Menu
         id="language-menu"
         anchorEl={anchorEl}
@@ -49,26 +118,17 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ sx = {} }) => {
           'aria-labelledby': 'language-button',
         }}
       >
-        {languages.map((language) => {
-          const langName =
-            language.code === 'en'
-              ? 'English'
-              : language.code === 'es'
-                ? 'Spanish'
-                : 'Portuguese';
-
-          return (
-            <MenuItem
-              key={language.code}
-              onClick={() => handleLanguageChange(language.code)}
-              selected={currentLanguage === language.code}
-            >
-              <ListItemText>{langName}</ListItemText>
-            </MenuItem>
-          );
-        })}
+        {AVAILABLE_LANGUAGES.map((lang) => (
+          <MenuItem
+            key={lang}
+            onClick={() => handleMenuItemClick(lang)}
+            selected={lang === activeLanguage}
+          >
+            {languageLabels[lang]}
+          </MenuItem>
+        ))}
       </Menu>
-    </>
+    </Box>
   );
 };
 

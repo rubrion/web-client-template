@@ -1,15 +1,17 @@
-import { Box, Button, ButtonProps } from '@mui/material';
+import { Box, Button, ButtonProps, SxProps, Theme } from '@mui/material';
 import { motion } from 'framer-motion';
 import React, { ReactNode } from 'react';
 
 import Section, { SectionProps } from './Section';
 
-interface CTASectionProps extends SectionProps {
+export interface CTASectionProps extends SectionProps {
   buttonText?: string | ReactNode;
   buttonVariant?: 'contained' | 'outlined' | 'text';
   buttonColor?: ButtonProps['color'];
   onButtonClick?: () => void;
   buttonPosition?: 'top' | 'bottom';
+  description?: string | ReactNode;
+  sx?: SxProps<Theme>;
 }
 
 const CTASection: React.FC<CTASectionProps> = ({
@@ -19,6 +21,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   onButtonClick,
   buttonPosition = 'bottom',
   children,
+  sx,
   ...sectionProps
 }) => {
   const buttonComponent = buttonText ? (
@@ -54,7 +57,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   ) : null;
 
   return (
-    <Section {...sectionProps}>
+    <Section sx={sx} {...sectionProps}>
       {buttonPosition === 'top' && buttonComponent}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

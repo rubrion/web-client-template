@@ -13,30 +13,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useRef, useState } from 'react';
 
+import { useLocalizedContent } from '../hooks/useLocalizedContent';
 import BaseLayout from '../layouts/BaseLayout';
 import { submitTeamJoinApplication } from '../services/teamJoin';
 
 const TeamJoin: React.FC = () => {
-  const { t, i18n } = useTranslation('screens', { keyPrefix: 'teamJoin' });
-  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
-
-  // Force re-render when language changes
-  useEffect(() => {
-    const handleLanguageChange = () => forceUpdate();
-    document.addEventListener('i18n-language-changed', handleLanguageChange);
-    i18n.on('languageChanged', handleLanguageChange);
-    return () => {
-      document.removeEventListener(
-        'i18n-language-changed',
-        handleLanguageChange
-      );
-      i18n.off('languageChanged', handleLanguageChange);
-    };
-  }, [i18n]);
-
+  const { getRequiredContent } = useLocalizedContent('screens', 'teamJoin');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>('');
   const [formData, setFormData] = useState({
@@ -55,8 +39,38 @@ const TeamJoin: React.FC = () => {
     message?: string;
   }>({});
 
-  const positions: string[] = (t('positions', { returnObjects: true }) ||
-    []) as string[];
+  // Get translations using the new hook pattern
+  const translations = {
+    title: getRequiredContent<string>('title'),
+    description: getRequiredContent<string>('description'),
+    whyWorkWithUs: {
+      title: getRequiredContent<string>('whyWorkWithUs.title'),
+      reasons: getRequiredContent<string[]>('whyWorkWithUs.reasons'),
+    },
+    currentOpenings: {
+      title: getRequiredContent<string>('currentOpenings.title'),
+      positions: getRequiredContent<string[]>('currentOpenings.positions'),
+    },
+    form: {
+      title: getRequiredContent<string>('form.title'),
+      fullName: getRequiredContent<string>('form.fullName'),
+      email: getRequiredContent<string>('form.email'),
+      phone: getRequiredContent<string>('form.phone'),
+      position: getRequiredContent<string>('form.position'),
+      github: getRequiredContent<string>('form.github'),
+      linkedin: getRequiredContent<string>('form.linkedin'),
+      uploadCV: getRequiredContent<string>('form.uploadCV'),
+      changeCV: getRequiredContent<string>('form.changeCV'),
+      selectedFile: getRequiredContent<string>('form.selectedFile'),
+      fileHelper: getRequiredContent<string>('form.fileHelper'),
+      message: getRequiredContent<string>('form.message'),
+      submit: getRequiredContent<string>('form.submit'),
+      submitting: getRequiredContent<string>('form.submitting'),
+      successMessage: getRequiredContent<string>('form.successMessage'),
+      errorMessage: getRequiredContent<string>('form.errorMessage'),
+    },
+    positions: getRequiredContent<string[]>('positions'),
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -91,7 +105,7 @@ const TeamJoin: React.FC = () => {
 
       setSubmitStatus({
         success: true,
-        message: response.message || t('form.successMessage'),
+        message: response.message || translations.form.successMessage,
       });
 
       setFormData({
@@ -107,7 +121,7 @@ const TeamJoin: React.FC = () => {
       setFileName('');
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : t('form.errorMessage');
+        error instanceof Error ? error.message : translations.form.errorMessage;
       setSubmitStatus({
         success: false,
         message: errorMessage,
@@ -123,55 +137,53 @@ const TeamJoin: React.FC = () => {
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="h3" gutterBottom>
-              {t('title')}
+              {translations.title}
             </Typography>
             <Typography variant="body1" component="p" sx={{ mb: 2 }}>
-              {t('description')}
+              {translations.description}
             </Typography>
 
             <Box sx={{ mt: 4 }}>
               <Typography variant="h6" gutterBottom>
-                {t('whyWorkWithUs.title')}
+                {translations.whyWorkWithUs.title}
               </Typography>
-              {(
-                (t('whyWorkWithUs.reasons', { returnObjects: true }) ||
-                  []) as string[]
-              ).map((reason: string, index: number) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  component="p"
-                  sx={{ mb: 2 }}
-                >
-                  • {reason}
-                </Typography>
-              ))}
+              {translations.whyWorkWithUs.reasons.map(
+                (reason: string, index: number) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    component="p"
+                    sx={{ mb: 2 }}
+                  >
+                    • {reason}
+                  </Typography>
+                )
+              )}
             </Box>
 
             <Box sx={{ mt: 4 }}>
               <Typography variant="h6" gutterBottom>
-                {t('currentOpenings.title')}
+                {translations.currentOpenings.title}
               </Typography>
-              {(
-                (t('currentOpenings.positions', { returnObjects: true }) ||
-                  []) as string[]
-              ).map((position: string, index: number) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  component="p"
-                  sx={{ mb: 2 }}
-                >
-                  • {position}
-                </Typography>
-              ))}
+              {translations.currentOpenings.positions.map(
+                (position: string, index: number) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    component="p"
+                    sx={{ mb: 2 }}
+                  >
+                    • {position}
+                  </Typography>
+                )
+              )}
             </Box>
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
             <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
               <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                {t('form.title')}
+                {translations.form.title}
               </Typography>
 
               {submitStatus.message && (
@@ -200,7 +212,7 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
-                      label={t('form.fullName')}
+                      label={translations.form.fullName}
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -210,7 +222,7 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
-                      label={t('form.email')}
+                      label={translations.form.email}
                       name="email"
                       type="email"
                       value={formData.email}
@@ -221,7 +233,7 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
-                      label={t('form.phone')}
+                      label={translations.form.phone}
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
@@ -231,16 +243,16 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth required>
                       <InputLabel id="position-label">
-                        {t('form.position')}
+                        {translations.form.position}
                       </InputLabel>
                       <Select
                         labelId="position-label"
                         name="position"
                         value={formData.position}
-                        label={t('form.position')}
+                        label={translations.form.position}
                         onChange={handleSelectChange}
                       >
-                        {positions.map((pos) => (
+                        {translations.positions.map((pos) => (
                           <MenuItem key={pos} value={pos}>
                             {pos}
                           </MenuItem>
@@ -252,7 +264,7 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
-                      label={t('form.github')}
+                      label={translations.form.github}
                       name="githubLink"
                       value={formData.githubLink}
                       onChange={handleChange}
@@ -263,7 +275,7 @@ const TeamJoin: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
-                      label={t('form.linkedin')}
+                      label={translations.form.linkedin}
                       name="linkedinLink"
                       value={formData.linkedinLink}
                       onChange={handleChange}
@@ -285,21 +297,25 @@ const TeamJoin: React.FC = () => {
                         onClick={triggerFileInput}
                         sx={{ mb: 1 }}
                       >
-                        {file ? t('form.changeCV') : t('form.uploadCV')}
+                        {file
+                          ? translations.form.changeCV
+                          : translations.form.uploadCV}
                       </Button>
                       {fileName && (
                         <Typography variant="body2" sx={{ ml: 1 }}>
-                          {t('form.selectedFile')}: {fileName}
+                          {translations.form.selectedFile}: {fileName}
                         </Typography>
                       )}
-                      <FormHelperText>{t('form.fileHelper')}</FormHelperText>
+                      <FormHelperText>
+                        {translations.form.fileHelper}
+                      </FormHelperText>
                     </Box>
                   </Grid>
 
                   <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
-                      label={t('form.message')}
+                      label={translations.form.message}
                       name="message"
                       multiline
                       rows={4}
@@ -318,7 +334,9 @@ const TeamJoin: React.FC = () => {
                       fullWidth
                       disabled={submitLoading}
                     >
-                      {submitLoading ? t('form.submitting') : t('form.submit')}
+                      {submitLoading
+                        ? translations.form.submitting
+                        : translations.form.submit}
                     </Button>
                   </Grid>
                 </Grid>

@@ -1,292 +1,206 @@
-// Create a new file: NewsletterPopup.tsx
-
+import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from '@mui/icons-material/Send';
 import {
+  Alert,
   Box,
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
+  Paper,
   TextField,
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useLocalizedContent } from '../../hooks/useLocalizedContent';
-import {
-  getStringContent,
-  getTranslatableContent,
-} from '../../utils/translationUtils';
+import { subscribeToNewsletter } from '../../services/newsLetter';
+import { spacing } from '../../theme/themeUtils';
+import MissingTranslation from '../translation/MissingTranslation';
 
 interface NewsletterProps {
-  open: boolean;
-  onClose: () => void;
+  open?: boolean;
+  onClose?: () => void;
 }
 
-const NewsletterPopup: React.FC<NewsletterProps> = ({ open, onClose }) => {
+const NewsletterPopup: React.FC<NewsletterProps> = ({
+  open = false,
+  onClose,
+}) => {
   const theme = useTheme();
-  const { getContent } = useLocalizedContent('common', 'newsletter');
+  const { getContent, getRequiredContent } = useLocalizedContent(
+    'common',
+    'newsletter'
+  );
+
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [error, setError] = useState('');
-  const [forceRefresh, setForceRefresh] = useState(0);
+  const [status, setStatus] = useState<
+    'idle' | 'submitting' | 'success' | 'error'
+  >('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Get translations with proper structure
   const translations = {
-    title: getContent<string>('title'),
-    description: getContent<string>('description'),
-    emailLabel: getContent<string>('emailLabel'),
-    emailRequired: getContent<string>('emailRequired'),
-    invalidEmail: getContent<string>('invalidEmail'),
-    subscribeButton: getContent<string>('subscribeButton'),
-    privacyNotice: getContent<string>('privacyNotice'),
-    successTitle: getContent<string>('successTitle'),
-    successMessage: getContent<string>('successMessage'),
-    closeButton: getContent<string>('closeButton'),
-    close: getContent<string>('close'),
+    title: getRequiredContent<string>('title'),
+    description: getRequiredContent<string>('description'),
+    emailLabel: getRequiredContent<string>('emailLabel'),
+    submitText: getRequiredContent<string>('subscribeButton'),
+    successText: getRequiredContent<string>('successMessage'),
+    errorText: getRequiredContent<string>('emailRequired'),
+    fieldRequired: getRequiredContent<string>('emailRequired'),
+    invalidEmail: getRequiredContent<string>('invalidEmail'),
   };
 
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      setForceRefresh((prev) => prev + 1);
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    document.addEventListener('i18n-language-changed', handleLanguageChange);
-
-    return () => {
-      document.removeEventListener(
-        'i18n-language-changed',
-        handleLanguageChange
-      );
-    };
-  }, []);
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (error) setError('');
-  };
-
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const handleSubscribe = async () => {
-    if (!email.trim()) {
-      setError(
-        getStringContent(
-          translations.emailRequired,
-          'newsletter.emailRequired'
-        ) || 'Email is required'
-      );
+    // Basic validation
+    if (!email) {
+      setStatus('error');
+      setErrorMessage(translations.fieldRequired);
       return;
     }
 
-    if (!validateEmail(email)) {
-      setError(
-        getStringContent(
-          translations.invalidEmail,
-          'newsletter.invalidEmail'
-        ) || 'Please enter a valid email'
-      );
+    // Email format validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      setStatus('error');
+      setErrorMessage(translations.invalidEmail);
       return;
     }
 
-    // Simulate API call
+    setStatus('submitting');
+
     try {
-      const response = await fetch('/newsletter/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setEmail('');
-        setSubscribed(true);
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      console.error('Newsletter subscription failed:', err);
-      setError('Subscription failed. Please try again.');
+      await subscribeToNewsletter(email);
+      setStatus('success');
+      setEmail('');
+      setErrorMessage('');
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage(
+        error instanceof Error ? error.message : translations.errorText
+      );
     }
   };
 
-  const handleClose = () => {
-    setEmail('');
-    setError('');
-    setSubscribed(false);
-    onClose();
+  // Helper function to render content or MissingTranslation component when null
+  const renderContent = (content: string | null, key: string) => {
+    return (
+      content ?? <MissingTranslation translationKey={key} showTooltip={true} />
+    );
   };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        sx: {
-          borderRadius: '8px', // Less rounded corners
-          maxWidth: '500px',
-          width: '100%',
-        },
-      }}
-      key={`newsletter-popup-${forceRefresh}`}
-    >
-      <DialogTitle sx={{ m: 0, p: 2 }}>
-        <IconButton
-          aria-label={getStringContent(translations.close, 'newsletter.close')}
-          onClick={handleClose}
+  const content = (
+    <Box>
+      <Typography variant="h5" component="h2" gutterBottom>
+        {renderContent(translations.title, 'common.newsletter.title')}
+      </Typography>
+
+      <Typography variant="body1" sx={{ mb: 3 }}>
+        {renderContent(
+          translations.description,
+          'common.newsletter.description'
+        )}
+      </Typography>
+
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            type="email"
+            label={translations.emailLabel}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={status === 'error'}
+            helperText={status === 'error' ? errorMessage : ''}
+            disabled={status === 'submitting' || status === 'success'}
+            sx={{ mb: 2 }}
+            InputProps={{
+              endAdornment:
+                status === 'success' ? (
+                  <InputAdornment position="end">
+                    <CheckIcon color="success" />
+                  </InputAdornment>
+                ) : null,
+            }}
+          />
+
+          {status === 'success' && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {translations.successText}
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            disabled={status === 'submitting' || status === 'success'}
+            endIcon={<SendIcon />}
+          >
+            {status === 'submitting' ? '...' : translations.submitText}
+          </Button>
+        </Box>
+      </form>
+    </Box>
+  );
+
+  if (open && onClose) {
+    return (
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            borderRadius: theme.shape.borderRadius,
+          },
+        }}
+      >
+        <DialogTitle
           sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
+            m: 0,
+            p: theme.spacing(2),
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+          {renderContent(translations.title, 'common.newsletter.title')}
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              color: theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>{content}</DialogContent>
+      </Dialog>
+    );
+  }
 
-      <DialogContent sx={{ px: 3, pb: 3, pt: 0 }}>
-        {!subscribed ? (
-          <>
-            <Typography
-              variant="h4"
-              component="h2"
-              gutterBottom
-              sx={{ fontWeight: 700 }}
-            >
-              {getTranslatableContent(translations.title, 'newsletter.title')}
-            </Typography>
-
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              {getTranslatableContent(
-                translations.description,
-                'newsletter.description'
-              )}
-            </Typography>
-
-            <Box component="form" noValidate sx={{ mt: 1 }}>
-              <TextField
-                fullWidth
-                label={
-                  getStringContent(
-                    translations.emailLabel,
-                    'newsletter.emailLabel'
-                  ) || ''
-                }
-                variant="outlined"
-                value={email}
-                onChange={handleEmailChange}
-                error={!!error}
-                helperText={error}
-                sx={{ mb: 1.5 }}
-                size="medium"
-              />
-
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={handleSubscribe}
-                sx={{
-                  py: 1.25,
-                  fontWeight: 600,
-                  mt: 1,
-                  borderRadius: '4px', // Less rounded button
-                }}
-              >
-                {getStringContent(
-                  translations.subscribeButton,
-                  'newsletter.subscribeButton'
-                )}
-              </Button>
-
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ display: 'block', mt: 1.5, textAlign: 'center' }}
-              >
-                {getTranslatableContent(
-                  translations.privacyNotice,
-                  'newsletter.privacyNotice'
-                )}
-              </Typography>
-            </Box>
-          </>
-        ) : (
-          <Box sx={{ py: 3, textAlign: 'center' }}>
-            <Box
-              sx={{
-                width: '60px',
-                height: '60px',
-                borderRadius: '50%',
-                backgroundColor: 'success.light',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 20px',
-              }}
-            >
-              <Box
-                component="svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"
-                  fill={theme.palette.success.main}
-                />
-              </Box>
-            </Box>
-
-            <Typography
-              variant="h5"
-              component="h3"
-              gutterBottom
-              sx={{ fontWeight: 600 }}
-            >
-              {getTranslatableContent(
-                translations.successTitle,
-                'newsletter.successTitle'
-              )}
-            </Typography>
-
-            <Typography variant="body1" sx={{ mb: 2.5 }}>
-              {getTranslatableContent(
-                translations.successMessage,
-                'newsletter.successMessage'
-              )}
-            </Typography>
-
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleClose}
-              sx={{
-                mt: 1,
-                fontWeight: 500,
-                borderRadius: '4px', // Less rounded button
-              }}
-            >
-              {getStringContent(
-                translations.closeButton,
-                'newsletter.closeButton'
-              )}
-            </Button>
-          </Box>
-        )}
-      </DialogContent>
-    </Dialog>
+  return (
+    <Paper
+      elevation={2}
+      sx={{
+        p: spacing.lg,
+        borderRadius: theme.shape.borderRadius,
+        mt: spacing.xl,
+      }}
+    >
+      {content}
+    </Paper>
   );
 };
 
