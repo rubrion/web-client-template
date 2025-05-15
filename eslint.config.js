@@ -56,6 +56,13 @@ export default [
       },
     },
   },
+  // Override for TypeScript files to disable no-undef as recommended by typescript-eslint
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      'no-undef': 'off', // TypeScript's type checking already handles this effectively
+    },
+  },
   {
     files: [
       '**/*.test.{ts,tsx,js,jsx}',

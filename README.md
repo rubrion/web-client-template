@@ -10,7 +10,6 @@ A comprehensive React + TypeScript frontend starter template with built-in routi
   - [SEO with PageHelmet](#seo-with-pagehelmet)
   - [Mock Service Worker (MSW)](#mock-service-worker-msw)
   - [Theme System (Dark/Light Modes)](#theme-system-darklight-modes)
-  - [Breadcrumbs](#breadcrumbs)
   - [Lazy Loading](#lazy-loading)
   - [MSW Initialization Command](#msw-initialization-command)
 - [Getting Started](#getting-started)
@@ -31,7 +30,6 @@ A comprehensive React + TypeScript frontend starter template with built-in routi
 - **Theme System**: Dark/light mode with CSS variables
 - **SEO Optimization**: Helmet-based metadata management
 - **Lazy Loading**: Code-splitting for performance
-- **Breadcrumbs**: Automatic navigation breadcrumbs
 - **EditorConfig**: Consistent coding styles across editors
 - **Material UI**: Comprehensive UI component library
 - **Automated CI/CD**: GitHub Actions for deployment and releases
@@ -61,11 +59,6 @@ This template provides many features to make development easier. However, not al
 
 - Applies consistent styles across the app and allows easy theme switching.
 - If the project does not require a dark mode or theme customization, you can remove the `ThemeContext` and simplify the CSS variables.
-
-### Breadcrumbs
-
-- Helpful if you have nested routes or want users to navigate deeper pages more easily.
-- Can be removed for flat or very simple navigation structures.
 
 ### Lazy Loading
 
