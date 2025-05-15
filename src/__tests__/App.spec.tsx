@@ -5,21 +5,19 @@ import React from 'react';
 
 import App from '../App';
 
-// Define proper theme context type to avoid using 'any'
 interface ThemeContextType {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
 
-// Mock window.matchMedia - this is needed for the ThemeProvider
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: vi.fn(), // Deprecated
-    removeListener: vi.fn(), // Deprecated
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
@@ -42,10 +40,8 @@ vi.mock('../context/ThemeContext', () => ({
   useTheme: () => ({ theme: 'light', toggleTheme: vi.fn() }),
 }));
 
-vi.mock('react-helmet-async', () => ({
-  HelmetProvider: ({ children }: { children: React.ReactNode }) => (
-    <>{children}</>
-  ),
+vi.mock('react-helmet', () => ({
+  Helmet: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('react-router-dom', () => ({
