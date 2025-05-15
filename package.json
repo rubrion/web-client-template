@@ -48,6 +48,7 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
+    "@types/react-helmet": "^6.1.11",
     "@types/react-slick": "^0.23.13",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.29.1",
